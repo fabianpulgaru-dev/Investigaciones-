@@ -8,533 +8,801 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;padding:1rem}
-.wrap{max-width:1100px;margin:0 auto}
-.status-bar{display:flex;align-items:center;gap:8px;margin-bottom:1rem;padding:8px 12px;background:#f1efe8;border-radius:8px;font-size:12px;color:#5f5e5a;flex-wrap:wrap}
-.status-dot{width:8px;height:8px;border-radius:50%;background:#888;flex-shrink:0}
-.status-dot.ok{background:#639922}.status-dot.loading{background:#BA7517;animation:pulse 1s infinite}.status-dot.err{background:#E24B4A}
+.wrap{max-width:1200px;margin:0 auto}
+h1{font-size:18px;font-weight:500;margin-bottom:2px}
+.sub{font-size:12px;color:#5f5e5a;margin-bottom:1rem}
+.sbar{display:flex;align-items:center;gap:8px;margin-bottom:1rem;padding:8px 12px;background:#f1efe8;border-radius:8px;font-size:12px;color:#5f5e5a;flex-wrap:wrap}
+.sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sdot.ok{background:#639922}.sdot.loading{background:#BA7517;animation:pulse 1s infinite}.sdot.err{background:#E24B4A}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .nav{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1.25rem;border-bottom:1px solid #e5e5e0;padding-bottom:10px}
-.nb{padding:6px 13px;font-size:12px;border:1px solid #ccc;border-radius:8px;background:transparent;color:#5f5e5a;cursor:pointer;transition:all .15s}
+.nb{padding:6px 13px;font-size:12px;border:1px solid #ccc;border-radius:8px;background:transparent;color:#5f5e5a;cursor:pointer}
 .nb:hover{background:#e5e5e0}
 .nb.active{background:#e6f1fb;color:#0c447c;border-color:#85b7eb}
 .sec{display:none}.sec.active{display:block}
 .mg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:1.25rem}
+.mg3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:1.25rem}
 .mc{background:#f1efe8;border-radius:8px;padding:12px}
 .ml{font-size:11px;color:#5f5e5a;margin-bottom:4px}
 .mv{font-size:22px;font-weight:500;color:#1a1a1a}
 .ms{font-size:11px;color:#5f5e5a;margin-top:2px}
 .mv.g{color:#3B6D11}.mv.a{color:#854F0B}.mv.r{color:#A32D2D}.mv.b{color:#185FA5}
-.row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:10px}
-.card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:14px}
+.r2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:10px}
+.r3{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:10px}
+.card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:14px;margin-bottom:10px}
 .ct{font-size:11px;font-weight:500;color:#5f5e5a;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
 .cw{position:relative;width:100%}
-.badge{font-size:10px;padding:2px 7px;border-radius:8px;display:inline-block}
-.bg{background:#EAF3DE;color:#3B6D11}.ba{background:#FAEEDA;color:#854F0B}.br{background:#FCEBEB;color:#A32D2D}.bb{background:#E6F1FB;color:#185FA5}
-.pb{height:5px;background:#e5e5e0;border-radius:3px;overflow:hidden;margin-top:3px}
-.pf{height:100%;border-radius:3px}
+.badge{font-size:10px;padding:2px 7px;border-radius:8px;display:inline-block;white-space:nowrap}
+.bg{background:#EAF3DE;color:#3B6D11}.ba{background:#FAEEDA;color:#854F0B}.br{background:#FCEBEB;color:#A32D2D}.bb{background:#E6F1FB;color:#185FA5}.bpur{background:#EEEDFE;color:#3C3489}
 .fbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
 .fbar select,.fbar input{font-size:12px;padding:5px 8px;border:1px solid #ccc;border-radius:8px;background:#fff;color:#1a1a1a}
-.fbar input{min-width:180px}
+.fbar input{min-width:160px}
 .fbar label{font-size:12px;color:#5f5e5a}
 .stbl{width:100%;font-size:12px;border-collapse:collapse}
 .stbl th{font-weight:500;color:#5f5e5a;padding:7px 8px;text-align:left;border-bottom:1px solid #e5e5e0;font-size:11px;white-space:nowrap}
-.stbl td{padding:7px 8px;border-bottom:1px solid #e5e5e0;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+.stbl td{padding:7px 8px;border-bottom:1px solid #e5e5e0;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .stbl tr:hover td{background:#f5f5f3;cursor:pointer}
+.stbl tr.sel td{background:#e6f1fb}
+.tscroll{overflow-x:auto;border:1px solid #e5e5e0;border-radius:12px;max-height:420px;overflow-y:auto}
 .det{background:#f1efe8;border-radius:12px;padding:14px;margin-bottom:10px}
-.dn{font-size:14px;font-weight:500;color:#1a1a1a}
-.dp{font-size:12px;color:#5f5e5a;margin-top:2px}
+.det-name{font-size:14px;font-weight:500;color:#1a1a1a}
+.det-sub{font-size:12px;color:#5f5e5a;margin-top:2px}
 .sg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
-.sm{background:#fff;border-radius:8px;padding:8px;display:flex;justify-content:space-between;align-items:center}
-.sl{font-size:11px;color:#5f5e5a}.sv{font-size:12px;font-weight:500;color:#1a1a1a}
-.tl{display:flex;flex-direction:column;gap:6px;margin-top:4px}
-.tl-item{display:flex;gap:8px;align-items:flex-start}
-.tl-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
-.tl-txt{font-size:12px;color:#1a1a1a}
-.tl-sub{font-size:11px;color:#5f5e5a}
-.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;font-size:11px;color:#5f5e5a}
-.legend span{display:flex;align-items:center;gap:4px}
+.sm{background:#fff;border-radius:8px;padding:8px;display:flex;justify-content:space-between;align-items:center;gap:4px}
+.sl{font-size:11px;color:#5f5e5a;flex-shrink:0}
+.sv{font-size:11px;font-weight:500;color:#1a1a1a;text-align:right}
+.pb{height:6px;background:#e5e5e0;border-radius:3px;overflow:hidden;margin-top:3px}
+.pf{height:100%;border-radius:3px}
+.tl{display:flex;flex-direction:column;gap:6px}
+.tli{display:flex;gap:8px;align-items:flex-start}
+.tld{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.tlt{font-size:12px;color:#1a1a1a}
+.tls{font-size:11px;color:#5f5e5a}
+.empty{font-size:12px;color:#888;padding:16px;text-align:center}
+.rbtn{font-size:11px;padding:4px 10px;border:1px solid #ccc;border-radius:8px;background:#fff;color:#5f5e5a;cursor:pointer;margin-left:auto}
+.rbtn:hover{background:#e5e5e0}
+.leg{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;font-size:11px;color:#5f5e5a}
+.leg span{display:flex;align-items:center;gap:4px}
 .ld{width:9px;height:9px;border-radius:2px;flex-shrink:0}
-.empty{font-size:13px;color:#5f5e5a;padding:20px;text-align:center}
-.refresh-btn{font-size:11px;padding:4px 10px;border:1px solid #ccc;border-radius:8px;background:#fff;color:#5f5e5a;cursor:pointer;margin-left:auto}
-.refresh-btn:hover{background:#e5e5e0}
-h1{font-size:18px;font-weight:500;margin-bottom:4px;color:#1a1a1a}
-.subtitle{font-size:13px;color:#5f5e5a;margin-bottom:1rem}
-@media(max-width:600px){.mg{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}}
+.alert-banner{background:#FCEBEB;border:1px solid #F7C1C1;border-radius:8px;padding:10px 14px;font-size:12px;color:#A32D2D;margin-bottom:10px}
+@media(max-width:700px){.mg{grid-template-columns:1fr 1fr}.r2,.r3{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="wrap">
-
 <h1>Visor de acompañamiento</h1>
-<p class="subtitle">Equipo UTE · Datos en tiempo real desde Google Sheets</p>
+<p class="sub">Equipo UTE · 291 estudiantes · 1ro y 2do año</p>
 
-<div class="status-bar">
-  <div class="status-dot loading" id="dot-bit"></div>
-  <span id="status-bit">Conectando bitácora...</span>
-  <div class="status-dot loading" id="dot-prom" style="margin-left:12px"></div>
-  <span id="status-prom">Cargando promedios...</span>
-  <div class="status-dot loading" id="dot-lib" style="margin-left:12px"></div>
-  <span id="status-lib">Cargando libro de clases...</span>
-  <button class="refresh-btn" onclick="loadAll()">Actualizar datos</button>
+<div class="sbar">
+  <div class="sdot loading" id="dot-bit"></div><span id="st-bit">Conectando bitácora...</span>
+  <div class="sdot loading" id="dot-prom" style="margin-left:12px"></div><span id="st-prom">Cargando promedios...</span>
+  <button class="rbtn" onclick="loadRemote()">Actualizar datos en vivo</button>
 </div>
 
 <div class="nav">
   <button class="nb active" onclick="show('general',this)">Vista general</button>
-  <button class="nb" onclick="show('sesiones',this)">Sesiones</button>
+  <button class="nb" onclick="show('diagnostico',this)">Diagnóstico</button>
   <button class="nb" onclick="show('estudiantes',this)">Estudiantes</button>
-  <button class="nb" onclick="show('notas',this)">Notas</button>
+  <button class="nb" onclick="show('sesiones',this)">Sesiones</button>
+  <button class="nb" onclick="show('carreras',this)">Por carrera</button>
   <button class="nb" onclick="show('alertas',this)">Alertas</button>
 </div>
 
+<!-- GENERAL -->
 <div id="general" class="sec active">
   <div class="mg">
-    <div class="mc"><div class="ml">Estudiantes en bitácora</div><div class="mv b" id="tot-est">—</div><div class="ms">registros activos</div></div>
-    <div class="mc"><div class="ml">Sesiones psicoeducativas</div><div class="mv" id="tot-psico">—</div><div class="ms">atenciones registradas</div></div>
-    <div class="mc"><div class="ml">Promedio semestre 20252</div><div class="mv g" id="tot-prom">—</div><div class="ms">estudiantes PACE+Elijo</div></div>
-    <div class="mc"><div class="ml">Bajo rendimiento (&lt;4.0)</div><div class="mv r" id="tot-bajo">—</div><div class="ms">requieren atención</div></div>
+    <div class="mc"><div class="ml">Total estudiantes</div><div class="mv b">291</div><div class="ms">1ro: 166 · 2do: 125</div></div>
+    <div class="mc"><div class="ml">Con diagnóstico</div><div class="mv">93</div><div class="ms">evaluados Ev_Inicial</div></div>
+    <div class="mc"><div class="ml">Con alerta activa</div><div class="mv r">16</div><div class="ms">CarPACE26</div></div>
+    <div class="mc"><div class="ml">Sesiones psico (live)</div><div class="mv b" id="g-psico">—</div><div class="ms">bitácora en vivo</div></div>
   </div>
-  <div class="row2">
+  <div class="r2">
     <div class="card">
-      <div class="ct">Sesiones por área</div>
-      <div class="legend">
-        <span><span class="ld" style="background:#7F77DD"></span>Psicoeducativo</span>
-        <span><span class="ld" style="background:#378ADD"></span>Matemática</span>
-        <span><span class="ld" style="background:#1D9E75"></span>Alfabetización</span>
-      </div>
-      <div class="cw" style="height:180px"><canvas id="c-areas"></canvas></div>
+      <div class="ct">Estudiantes por carrera (top 8)</div>
+      <div class="cw" style="height:200px"><canvas id="c-carr"></canvas></div>
     </div>
     <div class="card">
-      <div class="ct">Distribución notas semestre 20252</div>
-      <div class="cw" style="height:180px"><canvas id="c-notas-dist"></canvas></div>
+      <div class="ct">Vía de admisión</div>
+      <div class="cw" style="height:200px"><canvas id="c-adm"></canvas></div>
     </div>
   </div>
-  <div class="row2">
+  <div class="r3">
     <div class="card">
-      <div class="ct">Carreras con más estudiantes</div>
-      <div class="cw" style="height:180px"><canvas id="c-carreras"></canvas></div>
+      <div class="ct">Género (CarPACE26)</div>
+      <div class="cw" style="height:160px"><canvas id="c-gen"></canvas></div>
     </div>
     <div class="card">
-      <div class="ct">Asistencia sesiones psicoeducativas</div>
-      <div class="cw" style="height:180px"><canvas id="c-asist"></canvas></div>
+      <div class="ct">Recursos tecnológicos</div>
+      <div class="cw" style="height:160px"><canvas id="c-tech"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">Trabaja actualmente</div>
+      <div class="cw" style="height:160px"><canvas id="c-trab"></canvas></div>
     </div>
   </div>
 </div>
 
+<!-- DIAGNÓSTICO -->
+<div id="diagnostico" class="sec">
+  <div class="mg">
+    <div class="mc"><div class="ml">Evaluados</div><div class="mv">93</div><div class="ms">de 166 de 1er año</div></div>
+    <div class="mc"><div class="ml">Psicoeducativo Alto</div><div class="mv g">35%</div><div class="ms">33 estudiantes</div></div>
+    <div class="mc"><div class="ml">Alfabetización Bajo</div><div class="mv r">65%</div><div class="ms">área crítica</div></div>
+    <div class="mc"><div class="ml">Matemática Bajo</div><div class="mv r">70%</div><div class="ms">área crítica</div></div>
+  </div>
+  <div class="r2">
+    <div class="card">
+      <div class="ct">Niveles por área</div>
+      <div class="leg">
+        <span><span class="ld" style="background:#639922"></span>Alto</span>
+        <span><span class="ld" style="background:#BA7517"></span>Medio</span>
+        <span><span class="ld" style="background:#E24B4A"></span>Bajo</span>
+      </div>
+      <div class="cw" style="height:180px"><canvas id="c-dniveles"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">Puntajes Psicoeducativo (máx 24)</div>
+      <div class="cw" style="height:180px"><canvas id="c-dpsico"></canvas></div>
+    </div>
+  </div>
+  <div class="r2">
+    <div class="card">
+      <div class="ct">Puntajes Alfabetización (máx 6)</div>
+      <div class="cw" style="height:160px"><canvas id="c-dalfa"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">Puntajes Matemática (máx 9)</div>
+      <div class="cw" style="height:160px"><canvas id="c-dmat"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ESTUDIANTES -->
+<div id="estudiantes" class="sec">
+  <div class="fbar">
+    <input type="text" id="busq-est" placeholder="Buscar nombre..." oninput="filtrarEst()">
+    <label>Año:</label>
+    <select id="fil-año" onchange="filtrarEst()">
+      <option value="">Todos</option><option value="1ro">1er año</option><option value="2do">2do año</option>
+    </select>
+    <label>Carrera:</label>
+    <select id="fil-carr" onchange="filtrarEst()"><option value="">Todas</option></select>
+    <label>Alerta:</label>
+    <select id="fil-alerta" onchange="filtrarEst()">
+      <option value="">Todas</option><option value="SI">Con alerta</option><option value="0">Sin alerta</option>
+    </select>
+    <label>Diagnóstico:</label>
+    <select id="fil-diag" onchange="filtrarEst()">
+      <option value="">Todos</option><option value="Alto">Alto</option><option value="Medio">Medio</option><option value="Bajo">Bajo</option>
+    </select>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:10px">
+    <div>
+      <div style="font-size:11px;color:#5f5e5a;margin-bottom:6px" id="est-count"></div>
+      <div class="tscroll">
+        <table class="stbl">
+          <thead><tr>
+            <th style="min-width:160px">Nombre</th>
+            <th>Año</th>
+            <th style="min-width:120px">Carrera</th>
+            <th>Psico</th><th>Alfa</th><th>Mat</th>
+            <th>Nota</th><th>Alerta</th>
+          </tr></thead>
+          <tbody id="est-body"></tbody>
+        </table>
+      </div>
+    </div>
+    <div id="est-det-panel">
+      <div class="det">
+        <div class="det-name" id="det-n">Selecciona un estudiante</div>
+        <div class="det-sub" id="det-c">—</div>
+        <div class="sg">
+          <div class="sm"><span class="sl">Año</span><span class="sv" id="det-año">—</span></div>
+          <div class="sm"><span class="sl">Admisión</span><span class="sv" id="det-adm">—</span></div>
+          <div class="sm"><span class="sl">Género</span><span class="sv" id="det-gen">—</span></div>
+          <div class="sm"><span class="sl">Trabaja</span><span class="sv" id="det-trab">—</span></div>
+          <div class="sm"><span class="sl">Tecnología</span><span class="sv" id="det-tech">—</span></div>
+          <div class="sm"><span class="sl">Pueblo orig.</span><span class="sv" id="det-pueblo">—</span></div>
+          <div class="sm"><span class="sl">Criterios</span><span class="sv" id="det-crit">—</span></div>
+          <div class="sm"><span class="sl">Nota sem.</span><span class="sv" id="det-nota">—</span></div>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:#5f5e5a">Mail personal</div>
+        <div style="font-size:11px;color:#185FA5;margin-top:2px;word-break:break-all" id="det-mail"></div>
+        <div style="margin-top:6px;font-size:11px;color:#5f5e5a">Mail UAH</div>
+        <div style="font-size:11px;color:#185FA5;margin-top:2px;word-break:break-all" id="det-mailuah"></div>
+      </div>
+      <div class="card" id="det-diag-card">
+        <div class="ct">Diagnóstico inicial</div>
+        <div id="det-diag-content"><div class="empty">Sin datos de diagnóstico</div></div>
+      </div>
+      <div class="card">
+        <div class="ct">Alerta / Dificultades</div>
+        <div id="det-alerta-content"><div class="empty">Sin alertas registradas</div></div>
+      </div>
+      <div class="card">
+        <div class="ct">Últimas sesiones (en vivo)</div>
+        <div class="tl" id="det-ses"><div class="empty">Cargando...</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SESIONES -->
 <div id="sesiones" class="sec">
   <div class="fbar">
     <label>Área:</label>
-    <select id="fil-area" onchange="renderSesiones()">
+    <select id="fil-area" onchange="renderSes()">
       <option value="psico">Psicoeducativo</option>
       <option value="mat">Matemática</option>
       <option value="alfa">Alfabetización</option>
     </select>
     <label>Profesional:</label>
-    <select id="fil-prof" onchange="renderSesiones()"><option value="">Todos</option></select>
+    <select id="fil-prof" onchange="renderSes()"><option value="">Todos</option></select>
     <label>Asistencia:</label>
-    <select id="fil-asist" onchange="renderSesiones()">
-      <option value="">Todas</option>
-      <option value="SI">Asistió</option>
-      <option value="NO">No asistió</option>
+    <select id="fil-asist" onchange="renderSes()">
+      <option value="">Todas</option><option value="SI">Asistió</option><option value="NO">No asistió</option>
     </select>
   </div>
   <div style="font-size:11px;color:#5f5e5a;margin-bottom:6px" id="ses-count"></div>
-  <div style="overflow-x:auto;border:1px solid #e5e5e0;border-radius:12px">
+  <div class="tscroll">
     <table class="stbl">
       <thead><tr>
-        <th>Estudiante</th><th>Fecha</th><th>Profesional</th>
-        <th>Asiste</th><th>Habilidad / Área</th><th>Necesidades registradas</th>
+        <th style="min-width:160px">Estudiante</th><th>Fecha</th><th>Profesional</th>
+        <th>Asiste</th><th>Área / Habilidad</th><th style="min-width:200px">Necesidades</th>
       </tr></thead>
       <tbody id="ses-body"></tbody>
     </table>
   </div>
 </div>
 
-<div id="estudiantes" class="sec">
+<!-- POR CARRERA -->
+<div id="carreras" class="sec">
   <div class="fbar">
-    <input type="text" id="busq" placeholder="Buscar por nombre..." oninput="renderEstudiantes()">
     <label>Carrera:</label>
-    <select id="fil-car-est" onchange="renderEstudiantes()"><option value="">Todas</option></select>
+    <select id="fil-carr2" onchange="renderCarrera()"><option value="">Selecciona una carrera</option></select>
   </div>
-  <div style="display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:10px">
-    <div>
-      <div style="font-size:11px;color:#5f5e5a;margin-bottom:6px" id="est-count"></div>
-      <div style="overflow-x:auto;border:1px solid #e5e5e0;border-radius:12px">
+  <div id="carr-content"><div class="empty">Selecciona una carrera para ver el análisis</div></div>
+</div>
+
+<!-- ALERTAS -->
+<div id="alertas" class="sec">
+  <div class="mg">
+    <div class="mc"><div class="ml">Alerta activa</div><div class="mv r">16</div><div class="ms">CarPACE26</div></div>
+    <div class="mc"><div class="ml">2+ criterios riesgo</div><div class="mv r" id="a-crit2">—</div><div class="ms">monitoreo reforzado</div></div>
+    <div class="mc"><div class="ml">Bajo 4.0 (notas)</div><div class="mv r" id="a-bajo4">—</div><div class="ms">riesgo académico</div></div>
+    <div class="mc"><div class="ml">Riesgo combinado</div><div class="mv r" id="a-combo">—</div><div class="ms">nota baja + alerta</div></div>
+  </div>
+  <div class="r2">
+    <div class="card">
+      <div class="ct">Estudiantes con alerta activa (CarPACE26)</div>
+      <div class="tscroll" style="max-height:280px">
         <table class="stbl">
-          <thead><tr><th>Nombre</th><th>Carrera</th><th>Ingreso</th><th>Sesiones</th></tr></thead>
-          <tbody id="est-body"></tbody>
+          <thead><tr><th>Nombre</th><th>Carrera</th><th>Criterios</th><th>Dificultad</th></tr></thead>
+          <tbody id="a-body1"></tbody>
         </table>
       </div>
     </div>
-    <div>
-      <div class="det">
-        <div class="dn" id="det-nombre">Selecciona un estudiante</div>
-        <div class="dp" id="det-carr">—</div>
-        <div class="sg">
-          <div class="sm"><span class="sl">Tipo ingreso</span><span class="sv" id="det-tipo">—</span></div>
-          <div class="sm"><span class="sl">Sesiones psico</span><span class="sv" id="det-nsespsico">—</span></div>
-          <div class="sm"><span class="sl">Nota semestre</span><span class="sv" id="det-nota">—</span></div>
-          <div class="sm"><span class="sl">Cursos inscritos</span><span class="sv" id="det-cursos">—</span></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ct">Últimas sesiones</div>
-        <div class="tl" id="det-sesiones"><div class="empty">Sin sesiones registradas</div></div>
+    <div class="card">
+      <div class="ct">Bajo rendimiento semestre 20252</div>
+      <div class="tscroll" style="max-height:280px">
+        <table class="stbl">
+          <thead><tr><th>Nombre</th><th>Carrera</th><th>Promedio</th><th>Pend.</th></tr></thead>
+          <tbody id="a-body2"></tbody>
+        </table>
       </div>
     </div>
   </div>
-</div>
-
-<div id="notas" class="sec">
-  <div class="mg" style="grid-template-columns:repeat(3,minmax(0,1fr))">
-    <div class="mc"><div class="ml">Promedio grupal</div><div class="mv g" id="n-prom">—</div><div class="ms">semestre 20252</div></div>
-    <div class="mc"><div class="ml">Bajo 4.0</div><div class="mv r" id="n-bajo">—</div><div class="ms">en riesgo</div></div>
-    <div class="mc"><div class="ml">Sobre 5.5</div><div class="mv g" id="n-alto">—</div><div class="ms">buen desempeño</div></div>
-  </div>
-  <div class="fbar">
-    <input type="text" id="busq-nota" placeholder="Buscar estudiante..." oninput="renderNotas()">
-    <label>Carrera:</label>
-    <select id="fil-car-nota" onchange="renderNotas()"><option value="">Todas</option></select>
-    <label>Rango:</label>
-    <select id="fil-rango" onchange="renderNotas()">
-      <option value="">Todos</option>
-      <option value="bajo">Bajo 4.0</option>
-      <option value="medio">4.0 – 5.0</option>
-      <option value="alto">Sobre 5.0</option>
-    </select>
-  </div>
-  <div style="font-size:11px;color:#5f5e5a;margin-bottom:6px" id="nota-count"></div>
-  <div style="overflow-x:auto;border:1px solid #e5e5e0;border-radius:12px">
-    <table class="stbl">
-      <thead><tr>
-        <th>Nombre</th><th>Carrera</th><th>Género</th>
-        <th>Cursos</th><th>Prom. simple</th><th>Prom. ponderado</th>
-      </tr></thead>
-      <tbody id="nota-body"></tbody>
-    </table>
-  </div>
-</div>
-
-<div id="alertas" class="sec">
-  <div class="mg">
-    <div class="mc"><div class="ml">Promedio bajo 4.0</div><div class="mv r" id="a-bajo4">—</div><div class="ms">riesgo académico</div></div>
-    <div class="mc"><div class="ml">Sin sesiones</div><div class="mv a" id="a-sinsesion">—</div><div class="ms">sin atención registrada</div></div>
-    <div class="mc"><div class="ml">Inasistencias psico</div><div class="mv a" id="a-inasist">—</div><div class="ms">citados, no asistieron</div></div>
-    <div class="mc"><div class="ml">Con cursos pendientes</div><div class="mv r" id="a-pend">—</div><div class="ms">ramos por aprobar</div></div>
-  </div>
   <div class="card">
-    <div class="ct">Estudiantes con promedio bajo 4.0 — semestre 20252</div>
-    <div style="overflow-x:auto">
+    <div class="ct">Riesgo combinado — bajo rendimiento + alerta psicosocial</div>
+    <div class="tscroll">
       <table class="stbl">
-        <thead><tr><th>Nombre</th><th>Carrera</th><th>Prom. simple</th><th>Cursos pend.</th><th>Estado</th></tr></thead>
-        <tbody id="alert-body"></tbody>
+        <thead><tr><th>Nombre</th><th>Carrera</th><th>Promedio</th><th>Alerta</th><th>Criterios</th><th>Dificultad</th></tr></thead>
+        <tbody id="a-body3"></tbody>
       </table>
     </div>
   </div>
 </div>
 
-</div>
+</div><!-- /wrap -->
 
 <script>
-// ── URLS CON PROXY CORS ─────────────────────────────────────
+// ── DATOS DEL LIBRO DE CLASES (incrustados) ─────────────────
+const LIBRO = [{"nombre":"CARLOS ALBERTO MEDRANO TRINIDAD","rut":"26251351","carrera":"ADMINISTRACIÓN PÚBLICA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"carlos.m.tfr1987@gmail.com","mail_uah":"CAMEDRAN@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":21,"nl_psico":"Alto","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"DANIELA STEFANI TRONCOSO ORELLANA","rut":"22459768","carrera":"ADMINISTRACIÓN PÚBLICA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"danitroncosoorellana@gmail.com","mail_uah":"DANITRON@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Trans masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"SI","dificultades":"posible desmotivación vocacional"},{"nombre":"GIULIANA ISIDORA CEA FUENTES","rut":"22548741","carrera":"ANTROPOLOGÍA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"giuliaanacea@gmail.com","mail_uah":"GCEA@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"JOURDANS IGNACIO OSORIO ESPINOZA","rut":"22662354","carrera":"ARQUEOLOGÍA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"jourdans.osorio@liceoa131.cl","mail_uah":"JOOSORIO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":9,"nl_psico":"Bajo","pts_alfa":1,"nl_alfa":"Bajo","pts_mat":6,"nl_mat":"Medio"},{"nombre":"EMILIA CONSTANZA VARGAS GARCÍA","rut":"22516486","carrera":"CIENCIA POLÍTICA Y RELACIONES INTERNACIONALES","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"emiliavargas3090@gmail.com","mail_uah":"EMVARGAG@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":0,"alerta":"NO","dificultades":"matemáticas y expresión oral y escrita"},{"nombre":"DANTE ELÍAS ISRAEL BASTÍAS GÓMEZ","rut":"22611866","carrera":"CONTADOR PÚBLICO AUDITOR","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"xpiriaplay@gmail.com","mail_uah":"DABASTIA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":4,"alerta":"NO","dificultades":"organización, planificación y comprensión lectora eventualmente"},{"nombre":"ANYERSY JULIANNY DARYESKA BERMUDEZ OLIVO","rut":"28737803","carrera":"CONTADOR PÚBLICO AUDITOR","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"dayerkaolivo@gmail.com","mail_uah":"ANBERMUD@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":19,"nl_psico":"Medio","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":6,"nl_mat":"Medio"},{"nombre":"EDUARDO CATALINO FLORES PEÑA","rut":"28699589","carrera":"CONTADOR PÚBLICO AUDITOR","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"eduardocatalino.flores27@gmail.com","mail_uah":"EDFLOREP@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"SI","dificultades":"álgebra","pts_psico":19,"nl_psico":"Medio","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"JOSÉ PEDRO HENRÍQUEZ MONTOYA","rut":"22529643","carrera":"CONTADOR PÚBLICO AUDITOR","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"josepedrohenriquez21@gmail.com","mail_uah":"JOHENRIM@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":""},{"nombre":"ASTRID MELANY LOZANO LAIZA","rut":"26010391","carrera":"CONTADOR PÚBLICO AUDITOR","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"astridlozano2006@gmail.com","mail_uah":"ALOZANO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"LUIS GUSTAVO LUTGARDO ENRIQUEZ","rut":"22677760","carrera":"CONTADOR PÚBLICO AUDITOR","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"luisluttgardo@gmail.com","mail_uah":"LLUTGARD@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":"","pts_psico":20,"nl_psico":"Alto","pts_alfa":4,"nl_alfa":"Medio","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"ALESSANDRO RODDY MANCHINARI CONDORI","rut":"22589182","carrera":"CONTADOR PÚBLICO AUDITOR","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"alekopower2@gmail.com","mail_uah":"AMANCHIN@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No lo sé","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"SI","dificultades":"posible diagnóstico; aprendizaje lento; organización; planificación; matemáticas","pts_psico":11,"nl_psico":"Bajo","pts_alfa":0,"nl_alfa":"Bajo","pts_mat":6,"nl_mat":"Medio"},{"nombre":"SCARLETT DANIELA MARTINEZ MARTÍNEZ","rut":"22429021","carrera":"CONTADOR PÚBLICO AUDITOR","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"scarlettmartinez1506@gmail.com","mail_uah":"SCMARTIN@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"Sí","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":""},{"nombre":"BASTIÁN IGNACIO MORALES TRONCOSO","rut":"22512152","carrera":"CONTADOR PÚBLICO AUDITOR","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"yem6030@gmail.com","mail_uah":"BAMORALT@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"NO","dificultades":"Le ha costado las materias. Le ha costado la organización del tiempo y matemáticas, fundamentos de economía. \n","pts_psico":17,"nl_psico":"Medio","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":6,"nl_mat":"Medio"},{"nombre":"MARYORY DAYANNA OTINIANO SEMINARIO","rut":"22748934","carrera":"CONTADOR PÚBLICO AUDITOR","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"dayannaotiniano07@gmail.com","mail_uah":"MOTINIAN@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"NO","dificultades":"ninguna por ahora"},{"nombre":"EDUARD FREDY QUISPE QUISPE","rut":"22541918","carrera":"CONTADOR PÚBLICO AUDITOR","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"eduardquispe03@gmail.com","mail_uah":"EDQUISPE@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":"","pts_psico":13,"nl_psico":"Bajo","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"ANGGELYS SABRIELYS AZUAJE ROJAS","rut":"28074590","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"anggybusiness@gmail.com","mail_uah":"AAZUAJE@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"ISIDORA MILLARAY BUCAREY QUEZADA","rut":"22687951","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"isidorabucarey890@gmail.com","mail_uah":"IBUCAREY@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"SI","dificultades":"planificación, autoeficacia y alfabetización "},{"nombre":"ALEXA CIHOMARA CEPEDA VALENZUELA","rut":"22490243","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"alexacepeda703@gmail.com","mail_uah":"ALCEPEDA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"KRISHNA LORETO DÍAZ BARRÍA","rut":"22389147","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"krishnaloretodiaz@gmail.com","mail_uah":"KRDIAZB@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"FRANCISCA MONSERRAT ESTUARDO ANTILAF","rut":"22546277","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"franciacaeatuardo@gmail.com","mail_uah":"FESTUARD@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":21,"nl_psico":"Alto","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":7,"nl_mat":"Medio"},{"nombre":"AILÈEN ANDREA GÓMEZ ORTEGA","rut":"22489870","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"aileenandrea2007@gmail.com","mail_uah":"AIGOMEZO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":23,"nl_psico":"Alto","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"MARTA ALEJANDRA GONZÁLEZ TORRES","rut":"22490909","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"gonzalezmaroo3o@gmail.com","mail_uah":"MARTGTOR@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"NO","dificultades":"comprensiónde textos y organización del tiempo","pts_psico":10,"nl_psico":"Bajo","pts_alfa":1,"nl_alfa":"Bajo","pts_mat":7,"nl_mat":"Medio"},{"nombre":"HELEN PAOLA LIDUEÑA MACHADO","rut":"28214690","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"liduenah@gmail.com","mail_uah":"HLIDUENA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"KATHERINE PAULINA LIEN TREUQUE","rut":"22750999","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"katherinelien238@gmail.com","mail_uah":"KLIEN@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":18,"nl_psico":"Medio","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"RICHARD IGNACIO LOPEZ ARTEAGA","rut":"27477495","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"rignaciola2007@gmail.com","mail_uah":"RILOPEZ@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"NO","dificultades":"ninguna por ahora","pts_psico":22,"nl_psico":"Alto","pts_alfa":6,"nl_alfa":"Alto","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"ALFONSO ESTEBAN MONTENEGRO URRUTIA","rut":"22474517","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"alfonsomontenegrololito@gmail.com","mail_uah":"ALMONTEN@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"FABIAN JESUS NIETO FUENTES","rut":"28636266","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"fabinieto69@gmail.com","mail_uah":"FNIETO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":21,"nl_psico":"Alto","pts_alfa":5,"nl_alfa":"Alto","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"VIVIAM KADMEL GEORGINA ORTIZ CONISLLA","rut":"24586867","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"viviamkadmelgconislla@gmail.com","mail_uah":"VIORTIZC@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"NO","dificultades":"no por ahora"},{"nombre":"LUNA SOFÍA OSORIO RIOS","rut":"24903113","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"lunaosorio1669@gmail.com","mail_uah":"LUOSORIR@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":15,"nl_psico":"Medio","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"CELESTE ANAHI PÉREZ RAMOS","rut":"22784065","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"celestetsuperez@gmail.com","mail_uah":"CEPEREZR@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":17,"nl_psico":"Medio","pts_alfa":4,"nl_alfa":"Medio","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"ANTONELLA SARAI REYES LOZANO","rut":"22483627","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"antonellareyeslozano56@gmail.com","mail_uah":"ANREYESL@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"GIARELLA AMARAL ROJAS MIRANDA","rut":"22494297","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"giarella2007@gmail.com","mail_uah":"GIROJASM@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"NO","dificultades":"comprensió de textos y planificación de estudios","pts_psico":20,"nl_psico":"Alto","pts_alfa":5,"nl_alfa":"Alto","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"CIELO ADRIANA ZAVALETA BRACAMONTE","rut":"26875548","carrera":"DERECHO","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"cielobracamonte7245@gmail.com","mail_uah":"CIZAVALE@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":""},{"nombre":"KATALINA ISIDORA ABARCA HERRERA","rut":"22676795","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"KABARCA356@GMAIL.COM","mail_uah":"KAABARCAHE@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":"","pts_psico":18,"nl_psico":"Medio","pts_alfa":4,"nl_alfa":"Medio","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"CRISTTAL ANKEL ALVARADO GUAJARDO","rut":"22557105","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"cristal.alvarado.gua@gmail.com","mail_uah":"CRALVARADO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":21,"nl_psico":"Alto","pts_alfa":6,"nl_alfa":"Alto","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"PÍA  IGNACIA BAZÁN GUAJARDO","rut":"22549905","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"hellokittypucca751@gmail.com","mail_uah":"PBAZAN@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":"","pts_psico":19,"nl_psico":"Medio","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":7,"nl_mat":"Medio"},{"nombre":"VALENTINA CABEZAS LARA","rut":"25053294","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"valentinacabezaslara@gmail.com","mail_uah":"VACABEZAS@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"SI","dificultades":"sit. socioeconómica","pts_psico":22,"nl_psico":"Alto","pts_alfa":5,"nl_alfa":"Alto","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"MARTINA IGNACIA CANO GUTIÉRREZ","rut":"22489039","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"MARTINACANO3108@GMAIL.COM","mail_uah":"MACANO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":15,"nl_psico":"Medio","pts_alfa":4,"nl_alfa":"Medio","pts_mat":2,"nl_mat":"Bajo"},{"nombre":"NATASHA ANTONIA CASANOVA MALDONADO","rut":"22314604","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"NATASHACASANOVA918@GMAIL.COM","mail_uah":"NCASANOVA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"MARTINA ISIDORA CELEDÓN GONZÁLEZ","rut":"22543952","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"martinaceledon43@gmail.com","mail_uah":"MACELEDON@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"NO","dificultades":"organización y planificación; salud mental eventualmente","pts_psico":15,"nl_psico":"Medio","pts_alfa":4,"nl_alfa":"Medio","pts_mat":6,"nl_mat":"Medio"},{"nombre":"LIZETH AMADA GELDRES ROBLES","rut":"23607108","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"lizethgeldres4@gmail.com","mail_uah":"LGELDRES@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":3,"alerta":"SI","dificultades":"comprensión lectora y escritura"},{"nombre":"MARÍA FERNANDA GODOY BELMAR","rut":"22579439","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"marigodoy.fernanda95@gmail.com","mail_uah":"MAGODOYBE@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":16,"nl_psico":"Medio","pts_alfa":1,"nl_alfa":"Bajo","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"CAROLINA FERNANDA GONZÁLEZ ARAOS","rut":"22449879","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"CARONXZ9@GMAIL.COM","mail_uah":"CAGONZALEZAR@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":14,"nl_psico":"Bajo","pts_alfa":4,"nl_alfa":"Medio","pts_mat":0,"nl_mat":"Bajo"},{"nombre":"KIARA CONSTANZA GONZÁLEZ SEGUEL","rut":"22210319","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"KIARACONSTANZAG@GMAIL.COM","mail_uah":"KIGONZALEZSE@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":"","pts_psico":12,"nl_psico":"Bajo","pts_alfa":4,"nl_alfa":"Medio","pts_mat":1,"nl_mat":"Bajo"},{"nombre":"KAREN ALEJANDRA HUECHUCOY LLANCALEO","rut":"22664110","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"karenhuechucoy6@gmail.com","mail_uah":"KHUECHUCOY@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"SI","dificultades":"dificultad en filosofía y comprensión de instrucciones en el ramo","pts_psico":18,"nl_psico":"Medio","pts_alfa":6,"nl_alfa":"Alto","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"ALONSO ARTURO HUENTELAO VALENZUELA","rut":"21672949","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"alonsohuentelao85@gmail.com","mail_uah":"AHUENTELAO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"SI (conflicto CE)","criterios":0,"alerta":"media: conflicto latente CE","dificultades":"ningúna por ahora","pts_psico":19,"nl_psico":"Medio","pts_alfa":6,"nl_alfa":"Alto","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"IGNACIA JESUS LARA MEZA","rut":"22480461","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"ignacialara1993@gmail.com","mail_uah":"ILARA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":"","pts_psico":12,"nl_psico":"Bajo","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"ISIDORA PAZ MORALES ESPINOSA","rut":"22631789","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"pacita020208@gmail.com","mail_uah":"ISIDMORA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":19,"nl_psico":"Medio","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":7,"nl_mat":"Medio"},{"nombre":"DAFNE BERENICE NARANJO VEAS","rut":"22162505","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"dafnenaranjo2006@gmail.com","mail_uah":"DANARANJO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":13,"nl_psico":"Bajo","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"ALEJANDRA  YUDITH ORTIZ GARCIA","rut":"28815456","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"ALEX143STAR@GMAIL.COM","mail_uah":"ALORTIZGA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":21,"nl_psico":"Alto","pts_alfa":5,"nl_alfa":"Alto","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"ALEJANDRA MARIA PONCE MANQUEÑIR","rut":"22482973","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"aleponcee180@gmail.com","mail_uah":"ALPONCEMA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":16,"nl_psico":"Medio","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"MADYSON ALMENDRA RAMÍREZ CONCHA","rut":"22623885","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"madysonramirez2508@gmail.com","mail_uah":"MARAMIREZCO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":"","pts_psico":13,"nl_psico":"Bajo","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":6,"nl_mat":"Medio"},{"nombre":"TANIA ELIZABETH RIVERA JORQUERA","rut":"22435476","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"taniarj0628@gmail.com","mail_uah":"TARIVERA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No lo sé","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"NO","dificultades":"orgtanización de estudio textos más dificultad en concentración","pts_psico":21,"nl_psico":"Alto","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":6,"nl_mat":"Medio"},{"nombre":"MARIA JOSE VIDAL CORREA","rut":"22183316","carrera":"EDUCACIÓN PARVULARIA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"mariajosevcorrea09@gmail.com","mail_uah":"MAVIDALC@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":12,"nl_psico":"Bajo","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"BRIGITHE ANABEL TOMICHA BALCAZAR","rut":"27581813","carrera":"GESTIÓN DE LA INFORMACIÓN, BIBLIOTECOLOGÍA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"tomichaanabel@gmail.com","mail_uah":"BTOMICHA@ALUMNOS.UAHURTADO.CL","mentor":"","pts_psico":24,"nl_psico":"Alto","pts_alfa":5,"nl_alfa":"Alto","pts_mat":6,"nl_mat":"Medio"},{"nombre":"ANTONIO IGNACIO ARÉVALO ALBORNOZ","rut":"22591326","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"nachinpb@hotmail.com","mail_uah":"ANAREVAA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"MAURICIO ALEXIS CANDIA HUINA","rut":"22617856","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"candiamauricio3101@gmail.com","mail_uah":"MACANDIH@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":18,"nl_psico":"Medio","pts_alfa":4,"nl_alfa":"Medio","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"CHRISTIAN MARCELO CASTRO IBARRA","rut":"22369559","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"cc8566111@gmail.com","mail_uah":"CHCASTRI@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"SI","dificultades":"matemáticas"},{"nombre":"DAWENSLEY CELESTIN .","rut":"26866031","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"celestindawensley@gmail.com","mail_uah":"DCELESTI@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"ESAÏE CHARLES .","rut":"25916714","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"esaicha82@gmail.com","mail_uah":"ECHARLES@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":"","pts_psico":17,"nl_psico":"Medio","pts_alfa":0,"nl_alfa":"Bajo","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"ALAN JESÚS DELGADO VERA","rut":"22678968","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"alanjesus2008d2@gmail.com","mail_uah":"ALDELGAV@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":16,"nl_psico":"Medio","pts_alfa":4,"nl_alfa":"Medio","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"IVAN ALEJANDRO ESPINOZA CURRUMILLA","rut":"22477826","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"COMPLEMENTARIA NEM 30%","mail_personal":"ivanespinozae811@gmail.com","mail_uah":"IVESPINOZA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":3,"alerta":"","dificultades":"","pts_psico":22,"nl_psico":"Alto","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":6,"nl_mat":"Medio"},{"nombre":"JIMMY GABRIEL LLANOS PAREDES","rut":"28591246","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"jimmy.llanosparedes22@demquintanormal.cl","mail_uah":"JILLANOS@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"HASTING FELIMON MALPARTIDA AGAPITO","rut":"22505883","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"hastingmalpartida6@gmail.com","mail_uah":"HMALPART@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":3,"alerta":"NO","dificultades":"orientación salas y en parte el curso de álgebra"},{"nombre":"MATÍAS ADRIANO MICHUE PUCCIER","rut":"22463385","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"matiasmipu@gmail.com","mail_uah":"MMICHUE@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":17,"nl_psico":"Medio","pts_alfa":1,"nl_alfa":"Bajo","pts_mat":6,"nl_mat":"Medio"},{"nombre":"ÁLVARO ALONSO NAVARRETE ESPINOZA","rut":"22609266","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"alvaronavarrete586@gmail.com","mail_uah":"ALNAVARE@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":18,"nl_psico":"Medio","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"DYLAN ALEXANDER NUÑEZ NUÑEZ","rut":"22546194","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"dylannunez32007@gmail.com","mail_uah":"DYNUNEZ@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":""},{"nombre":"CRISTHIAN EDUARDO PORTOCARRERO ORTIZ","rut":"23428075","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"cristhianportocarrero423@gmail.com","mail_uah":"CPORTOCA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"SI","dificultades":"cálculo","pts_psico":10,"nl_psico":"Bajo","pts_alfa":0,"nl_alfa":"Bajo","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"EMMANUEL ROJAS HERRERA","rut":"25447626","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"emmassj.2023@gmail.com","mail_uah":"EMROJASH@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"JUAN DANIEL RUBIO GALBAN","rut":"27775885","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"juanrubio@liceojfsrecoleta.net","mail_uah":"JURUBIO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":13,"nl_psico":"Bajo","pts_alfa":0,"nl_alfa":"Bajo","pts_mat":6,"nl_mat":"Medio"},{"nombre":"JOHAN ESNEIDER SUAREZ MORALES","rut":"27638616","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"johansuarez@insucodos.cl","mail_uah":"JOSUAREM@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":""},{"nombre":"DHILAN GERLAD URRA URRIA","rut":"22415221","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"ESTUDIANTE DESTACADO","mail_personal":"dhilanurra84@gmail.com","mail_uah":"DURRA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"DANIEL EDUARDO VILLAGRA HARRIS","rut":"22204759","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"dannielvillagra7@gmail.com","mail_uah":"DAVILLAH@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"DANIEL ALEXANDER VILLARREAL REYES","rut":"23867786","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"danivillareal043@gmail.com","mail_uah":"DANIVILL@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":20,"nl_psico":"Alto","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"SEBASTIAN MAX ANTON MUÑOZ","rut":"22630143","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"santon.munoz7@gmail.com","mail_uah":"SANTON@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"NO","dificultades":"grupo de pares y microeconomía"},{"nombre":"ANSI-FADELSON BELLANGE .","rut":"27823098","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"ansifadelsonbellange.w@gmail.com","mail_uah":"ABELLANG@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"SI","dificultades":"expresión oral por idioma y microeconomía"},{"nombre":"DAMARIS ANAHI CABRERA MOYANO","rut":"22657241","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"damarisanahicabreramoyano@gmail.com","mail_uah":"DACABREM@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":17,"nl_psico":"Medio","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"MARTÍN ARMANDO CÁRDENAS LICANDEO","rut":"22553341","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"cardenasmartinn705@gmail.com","mail_uah":"MARTCARD@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"SI","dificultades":"desfase en matemáticas","pts_psico":10,"nl_psico":"Bajo","pts_alfa":0,"nl_alfa":"Bajo","pts_mat":2,"nl_mat":"Bajo"},{"nombre":"HARLEX ALEXANDER GARMENDIA CASTELIN","rut":"26788082","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"COMPLEMENTARIA NEM 30%","mail_personal":"HARLEX2005@GMAIL.COM","mail_uah":"HGARMENDIA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"NO","dificultades":"matemáticas eventualmente"},{"nombre":"JHENNIFER ZARINA HIGA RAMIREZ","rut":"23718545","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"jhenniferhiga2007@gmail.com","mail_uah":"JHIGA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":""},{"nombre":"MONSERRAT ESPERANZA INOSTROZA ORTIZ","rut":"22313679","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"monserratinostroza2022@gmail.com","mail_uah":"MOINOSTO@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"ISIDORA ANDREA JALIL GUZMÁN","rut":"22189767","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"COMPLEMENTARIA NEM 30%","mail_personal":"isidora.jalil20@gmail.com","mail_uah":"IJALIL@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"DEYSON OLIVER LECHUGA CESPEDES","rut":"28223665","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"deysonlechuga@gmail.com","mail_uah":"DLECHUGA@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"ASHLEY CRISTEL MAYTA DEL AGUILA","rut":"22589724","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"amayta.delaguila@estudiante.reduca.cl","mail_uah":"AMAYTA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":""},{"nombre":"ROSE KEESHA MERVIL .","rut":"24939834","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"keeshamervil08@gmail.com","mail_uah":"RMERVIL@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":""},{"nombre":"LEONARDO MANUEL MONTES BAZALAR","rut":"22465280","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"ESTUDIANTE DESTACADO","mail_personal":"leonardom7889@gmail.com","mail_uah":"LMONTES@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":13,"nl_psico":"Bajo","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"GARY PATRICIO MORALES ASTUDILLO","rut":"22715239","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"garypatriciomoralesastudillo@gmail.com","mail_uah":"GARYMORA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":""},{"nombre":"STEPHANIE NAOMÍ NARIO RIOS","rut":"22486940","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"stxfanienr@gmail.com","mail_uah":"SNARIO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":5,"alerta":"","dificultades":""},{"nombre":"ARIEL ANGEL NÚÑEZ JEREZ","rut":"22508633","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"9arieln@gmail.com","mail_uah":"ARNUNEZJ@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"BELÉN YEEMIN OCAÑA CHANCO","rut":"22647688","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"belen.o.ch19@gmail.com","mail_uah":"BOCANA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":21,"nl_psico":"Alto","pts_alfa":4,"nl_alfa":"Medio","pts_mat":6,"nl_mat":"Medio"},{"nombre":"JHONNIER ANDRE OCON ELGUERA","rut":"27923076","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"gatosuave8@gmail.com","mail_uah":"JOCON@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"EMILIA IGNACIA ORREGO SILVA","rut":"22468355","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"emilia.orrego.si@gmail.com","mail_uah":"EMORREGO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"SI","dificultades":"tema becas y organización del estudio","pts_psico":16,"nl_psico":"Medio","pts_alfa":1,"nl_alfa":"Bajo","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"MARTÍN EDGARDO ORTEGA GALLARDO","rut":"22589172","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"titinortega07@gmail.com","mail_uah":"MAORTEGG@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"SI","dificultades":"matemáticas, organización y planificación","pts_psico":17,"nl_psico":"Medio","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"GENESIS GIULIANA RUBILAR GÁLVEZ","rut":"22579550","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"genesisrubilar17@gmail.com","mail_uah":"GERUBILA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":12,"nl_psico":"Bajo","pts_alfa":0,"nl_alfa":"Bajo","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"FERNANDA ANAHI SALAS PAVEZ","rut":"22552947","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"fersalaspavez17@gmail.com","mail_uah":"FERNSALA@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"KARLA ANAÍS SCHWAGER INOSTROZA","rut":"22574149","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"karlashga1996@gmail.com","mail_uah":"KSCHWAGE@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"NO","dificultades":"matemáticas álgebra; socialización","pts_psico":21,"nl_psico":"Alto","pts_alfa":4,"nl_alfa":"Medio","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"ELAINY VALENTINA VILORIA MARTINEZ","rut":"26546535","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"elainyviloria@gmail.com","mail_uah":"EVILORIA@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"WILKENNIA VILTENUS DERONVIL","rut":"28102203","carrera":"INGENIERÍA COMERCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"wilkeniaderonvilmusic@gmail.com","mail_uah":"WVILTENU@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":""},{"nombre":"VALENTINA IGNACIA FERNÁNDEZ ZAPATA","rut":"22489076","carrera":"PED. LENGUA CASTELL Y COMUNIC","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"MIRYZAPATA8@GMAIL.COM","mail_uah":"VAFERNANDEZZA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"ESPERANZA SOFÍA GONZÁLEZ SOTO","rut":"22556493","carrera":"PED. LENGUA CASTELL Y COMUNIC","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"ESPERANZAGONZALEZSOTO1@GMAIL.COM","mail_uah":"ESGONZALEZ@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":20,"nl_psico":"Alto","pts_alfa":4,"nl_alfa":"Medio","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"ABUBEKER MORISOF HURTADO ZAVALA","rut":"25692534","carrera":"PED. LENGUA CASTELL Y COMUNIC","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"abubekercompany.zhuba@gmail.com","mail_uah":"ABHURTAD@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":4,"alerta":"SI","dificultades":"","pts_psico":16,"nl_psico":"Medio","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"MARÍA IGNACIA ITURRA FUENTES","rut":"22531396","carrera":"PED. LENGUA CASTELL Y COMUNIC","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"aszhitohuachengbf@gmail.com","mail_uah":"MAITURRA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"No binario","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":21,"nl_psico":"Alto","pts_alfa":6,"nl_alfa":"Alto","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"MILLARAY RAYEN OTÁROLA PEÑA","rut":"22583914","carrera":"PED. LENGUA CASTELL Y COMUNIC","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"MILLARAY.RAYEN29@GMAIL.COM","mail_uah":"MOTAROLA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"DYLAN DAMIAN VERA SILVA","rut":"22151081","carrera":"PED. LENGUA CASTELL Y COMUNIC","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"d.verasilva27@gmail.com","mail_uah":"DYVERASI@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"BERENICE SOFÍA MORALES UGARTE","rut":"22690151","carrera":"PEDAGOGÍA EN BIOLOGÍA Y CIENCIAS NATURALES EN EDUCACIÓN MEDIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"pepinillocamaron@gmail.com","mail_uah":"BEMORALESUG@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"TAHIS ALONDRA CARRASCO BLU","rut":"22401525","carrera":"PEDAGOGÍA EN EDUCACIÓN BÁSICA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"tcarrascoblu@gmail.com","mail_uah":"TACARRAB@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":21,"nl_psico":"Alto","pts_alfa":1,"nl_alfa":"Bajo","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"VALENTINA PAZ ESCUDERO VELÁSQUEZ","rut":"22069302","carrera":"PEDAGOGÍA EN EDUCACIÓN BÁSICA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"escuderovalentina007@gmail.com","mail_uah":"VAESCUDERO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":""},{"nombre":"ANAÍS ELIZABETH GONZÁLEZ CONTRERAS","rut":"22470606","carrera":"PEDAGOGÍA EN EDUCACIÓN BÁSICA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"anaiselizabeth778@gmail.com","mail_uah":"ANGONZALEZCO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"NO","dificultades":"inglés y ensayos","pts_psico":9,"nl_psico":"Bajo","pts_alfa":1,"nl_alfa":"Bajo","pts_mat":6,"nl_mat":"Medio"},{"nombre":"LAURA SOFIA GUERRERO MOSQUERA","rut":"26926884","carrera":"PEDAGOGÍA EN EDUCACIÓN BÁSICA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"lausofiag77@gmail.com","mail_uah":"LAGUERRERO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":""},{"nombre":"ELIEL YAZID LARRAÍN BETANCUR","rut":"22417275","carrera":"PEDAGOGÍA EN EDUCACIÓN BÁSICA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"eliellarrain@gmail.com","mail_uah":"ELARRAIN@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"NOELIA BEATRIZ POBLETE ÁVILA","rut":"22750110","carrera":"PEDAGOGÍA EN EDUCACIÓN BÁSICA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"NOELIAPOBLETE233A@GMAIL.COM","mail_uah":"NOPOBLETE@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"NAYELI ALEJANDRA TARQUI NINA","rut":"26440294","carrera":"PEDAGOGÍA EN EDUCACIÓN BÁSICA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"TARQUINAYELI08@GMAIL.COM","mail_uah":"","mentor":""},{"nombre":"ELIZABETH ANDREA ALMONACID RIVEROS","rut":"22431316","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"ELIZABETHALMONACID467@GMAIL.COM","mail_uah":"EALMONACID@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Trans femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":"","pts_psico":9,"nl_psico":"Bajo","pts_alfa":0,"nl_alfa":"Bajo","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"ANTONELLA AYELÉN CHÁVEZ PROVOSTE","rut":"22560153","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"ANTOCHP07@GMAIL.COM","mail_uah":"ANCHAVEZPR@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":17,"nl_psico":"Medio","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":6,"nl_mat":"Medio"},{"nombre":"YANSSANIA ANDREA COPIA BRAVO","rut":"22564341","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"YANSSANIA.COPIA.BRAVO@GMAIL.COM","mail_uah":"YCOPIA@ALUMNOS.UAHURTADO.CL","mentor":"","pts_psico":19,"nl_psico":"Medio","pts_alfa":1,"nl_alfa":"Bajo","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"GONZALO FLORES","rut":"28172854","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"FLORESGONZALO534@GMAIL.COM","mail_uah":"GOFLORESGO@ALUMNOS.UAHURTADO.CL","mentor":"","pts_psico":13,"nl_psico":"Bajo","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"CATALINA IGNACIA MALDONADO GONZÁLEZ","rut":"22561781","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"CATALINAIGNACIAMALDONADO@GMAIL.COM","mail_uah":"CAMALDONADOGO@ALUMNOS.UAHURTADO.CL","mentor":"","pts_psico":11,"nl_psico":"Bajo","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"ROMINA GISELLE MATELUNA HERNÁNDEZ","rut":"22531757","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"roumiimateluna4278@gmail.com","mail_uah":"RMATELUN@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"POLETTE ANTONIA OCARANZA URBINA","rut":"22632099","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"poletteocaranza36@gmail.com","mail_uah":"POCARANZA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":"","pts_psico":13,"nl_psico":"Bajo","pts_alfa":5,"nl_alfa":"Alto","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"ROSA ANAHI RODRÍGUEZ CARRASCO","rut":"22461038","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"rosita.rodriguezcarrasco26@gmail.com","mail_uah":"ROSARODR@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":""},{"nombre":"SOFÍA BELÉN TELLO MUNDACA","rut":"22444889","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"SOFIATELLO23K@GMAIL.COM","mail_uah":"SOTELLO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No lo sé","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":21,"nl_psico":"Alto","pts_alfa":4,"nl_alfa":"Medio","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"EMELYN KRISHNA TRONCOSO CABELLO","rut":"22508347","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"EMELYN23TRONCOSO@GMAIL.COM","mail_uah":"ETRONCOSO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"NO","dificultades":"con un curso donde hay muchas personas y la distrae"},{"nombre":"SOFÍA ANTONIA VALLE MAULÉN","rut":"22566479","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"sofiaaaaaaaaas13@gmail.com","mail_uah":"SVALLE@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":7,"nl_psico":"Bajo","pts_alfa":1,"nl_alfa":"Bajo","pts_mat":6,"nl_mat":"Medio"},{"nombre":"FELIPE MAXIMILIANO GUZMÁN ARRIAGADA","rut":"22571380","carrera":"PEDAGOGÍA EN HISTORIA Y CCSS","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"feguzman7390@gmail.com","mail_uah":"FEGUZMAA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"NO","dificultades":"rasgos no neurotípicas ","pts_psico":19,"nl_psico":"Medio","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"JORGE PABLO MIRANDA CIFUENTES","rut":"22452581","carrera":"PEDAGOGÍA EN HISTORIA Y CCSS","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"JORGEMIRANDAC875@GMAIL.COM","mail_uah":"JOMIRANDACI@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":17,"nl_psico":"Medio","pts_alfa":1,"nl_alfa":"Bajo","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"JOSÉ RIGOBERTO ARISMENDI SÁNCHEZ","rut":"22703261","carrera":"PEDAGOGÍA EN INGLÉS","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"ilovediscord444@gmail.com","mail_uah":"JARISMENDI@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":18,"nl_psico":"Medio","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"MARTINA ALEMKA DESCOVIC POVEDA","rut":"22578732","carrera":"PEDAGOGÍA EN INGLÉS","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"martinadescovicp@gmail.com","mail_uah":"MDESCOVIC@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":19,"nl_psico":"Medio","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":7,"nl_mat":"Medio"},{"nombre":"CONSTANZA DELIBETH ISLA BALTODANO","rut":"22405458","carrera":"PEDAGOGÍA EN INGLÉS","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"CONSTANZAISLA28@GMAIL.COM","mail_uah":"COISLA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"NO","dificultades":"organización y planificación","pts_psico":20,"nl_psico":"Alto","pts_alfa":5,"nl_alfa":"Alto","pts_mat":6,"nl_mat":"Medio"},{"nombre":"EMILIA ANTONIA LÓPEZ MEDINA","rut":"22719292","carrera":"PEDAGOGÍA EN INGLÉS","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"dennisareyouok@gmail.com","mail_uah":"EMLOPEZME@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Trans masculino","pueblo":"No lo sé","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":21,"nl_psico":"Alto","pts_alfa":4,"nl_alfa":"Medio","pts_mat":7,"nl_mat":"Medio"},{"nombre":"MARIA ZULEIMA SOSA BORJA","rut":"27961433","carrera":"PEDAGOGÍA EN INGLÉS","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"sosam2668@gmail.com","mail_uah":"MSOSA@ALUMNOS.UAHURTADO.CL","mentor":"","pts_psico":21,"nl_psico":"Alto","pts_alfa":4,"nl_alfa":"Medio","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"FERNANDA BELÉN VALENCIA SANHUEZA","rut":"22693611","carrera":"PEDAGOGÍA EN INGLÉS","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"fernandaavalencia0904@gmail.com","mail_uah":"FVALENCIA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No lo sé","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"ANTONIA NAZARETH DEL CARMEN VÁSQUEZ ARAYA","rut":"22483927","carrera":"PEDAGOGÍA EN INGLÉS","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"vasquezarayaantonia@gmail.com","mail_uah":"ANTOVARA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"SARAI ESCARLET IBARRA LOBOS","rut":"22678557","carrera":"PEDAGOGÍA EN MATEMÁTICA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"ibarralobosarai.064@gmail.com","mail_uah":"SAIBARRA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":21,"nl_psico":"Alto","pts_alfa":4,"nl_alfa":"Medio","pts_mat":6,"nl_mat":"Medio"},{"nombre":"JANISS ANDREA MOSQUEIRA ANTILLANCA","rut":"22246106","carrera":"PEDAGOGÍA EN MATEMÁTICA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"JANISS.MOSQUEIRA60@GMAIL.COM","mail_uah":"JMOSQUEIRA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":19,"nl_psico":"Medio","pts_alfa":5,"nl_alfa":"Alto","pts_mat":1,"nl_mat":"Bajo"},{"nombre":"SOFÍA ALELI ZENTENO CORDERO","rut":"22693296","carrera":"PEDAGOGÍA EN MATEMÁTICA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"sa.zenteno08@gmail.com","mail_uah":"SOZENTEN@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Prefiero no responder","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":20,"nl_psico":"Alto","pts_alfa":4,"nl_alfa":"Medio","pts_mat":7,"nl_mat":"Medio"},{"nombre":"SOFÍA RAFAELLA ARAYA ANGEL","rut":"22493885","carrera":"PEDAGOGÍA EN MÚSICA ENS MEDIA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"sofiiiarangel@gmail.com","mail_uah":"SOARAYAA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No lo sé","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"JOHAN VÍCTOR MANUEL HINOSTROZA ÁLVAREZ","rut":"22575009","carrera":"PEDAGOGÍA EN MÚSICA ENS MEDIA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"hinostrozajohan4@gmail.com","mail_uah":"JHINOSTR@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":12,"nl_psico":"Bajo","pts_alfa":1,"nl_alfa":"Bajo","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"ARANTZA ABIGAIL SCARLETH HUERTA MOYA","rut":"22198050","carrera":"PEDAGOGÍA EN MÚSICA ENS MEDIA","año":"1ro","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"arantzahuerta71@gmail.com","mail_uah":"ARHUERTA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":3,"alerta":"NO","dificultades":"adaptación, organización ","pts_psico":17,"nl_psico":"Medio","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"EILEEN ALEXANDRA SALAZAR GONZALEZ","rut":"28039971","carrera":"PEDAGOGÍA EN MÚSICA ENS MEDIA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"inleeha4@gmail.com","mail_uah":"EISALAZA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"CATALINA ISIDORA VERGARA AZARES","rut":"22516678","carrera":"PERIODISMO","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"cergaracatalina@gmail.com","mail_uah":"CATAVERG@ALUMNOS.UAHURTADO.CL","mentor":"","pts_psico":16,"nl_psico":"Medio","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"TAMARA ALONDRA ARRIAZA LÓPEZ","rut":"21883037","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"lethimokaz@gmail.com","mail_uah":"TARRIAZA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":17,"nl_psico":"Medio","pts_alfa":1,"nl_alfa":"Bajo","pts_mat":1,"nl_mat":"Bajo"},{"nombre":"ERICK AVENDAÑO LIZANA","rut":"22460711","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"hanashimierror@gmail.com","mail_uah":"ERAVENDA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Trans masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":20,"nl_psico":"Alto","pts_alfa":4,"nl_alfa":"Medio","pts_mat":6,"nl_mat":"Medio"},{"nombre":"VALENTINA JESUS CORNEJO ZÚÑIGA","rut":"22205260","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"valentinacornejo192@gmail.com","mail_uah":"VACORNEZ@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":11,"nl_psico":"Bajo","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"ANGHELI YANELA CRUZ DIESTRA","rut":"25434338","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"angheli.cruz23@gmail.com","mail_uah":"ANCRUZD@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"SI","dificultades":"comprensión lectora y técnicas de estudio"},{"nombre":"MARTÍNA CONSTANZA CUBILLO PINO","rut":"22242268","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"cubillomartina@gmail.com","mail_uah":"MACUBILP@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":22,"nl_psico":"Alto","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":7,"nl_mat":"Medio"},{"nombre":"MARTÍN CHRISTIÁN GALAZ ZAMORANO","rut":"22701245","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"martinzamorano527@gmail.com","mail_uah":"MAGALAZZ@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"Sí","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"NO","dificultades":"no por ahora","pts_psico":20,"nl_psico":"Alto","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":6,"nl_mat":"Medio"},{"nombre":"VALERIA GIRAN MORENO","rut":"27955078","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"valgiran.a24@gmail.com","mail_uah":"VGIRAN@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Prefiero no responder","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"CARLA ALEXANDRA GIRON ROCCA","rut":"22464942","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"alexandrarocca822@gmail.com","mail_uah":"CGIRON@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":20,"nl_psico":"Alto","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"FERNANDO NICOLÁS GUZMÁN REVECO","rut":"22392112","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"fernando.guzmanr2007@gmail.com","mail_uah":"FEGUZMAR@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":""},{"nombre":"CRUSSY LORMIL .","rut":"25021521","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"crussylormil@gmail.com","mail_uah":"CLORMIL@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":23,"nl_psico":"Alto","pts_alfa":4,"nl_alfa":"Medio","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"IGNACIA ALEJANDRA MARILAO ARÁNGUIZ","rut":"22235615","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"ignacia.marilao1417@gmail.com","mail_uah":"IMARILAO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"Sí","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":""},{"nombre":"FERNANDA ANDREA MÁRQUEZ ESPINOZA","rut":"22496754","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"fernandamarquezespinoza@gmail.com","mail_uah":"FERNMARQ@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"GRECIA ANTHONELA MORA POLO","rut":"26952031","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"gmp16022007@gmail.com","mail_uah":"GRMORA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":"","pts_psico":20,"nl_psico":"Alto","pts_alfa":4,"nl_alfa":"Medio","pts_mat":6,"nl_mat":"Medio"},{"nombre":"MATÍAS IGNACIO ÑANCO PASTENE","rut":"22409440","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"matiasnanco@insucodos.cl","mail_uah":"MNANCO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"Sí","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":3,"alerta":"","dificultades":"","pts_psico":15,"nl_psico":"Medio","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"BELÉN DEL CARMEN OSORIO FUENTES","rut":"22570025","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"belenosoriofuentes@gmail.com","mail_uah":"BOSORIO@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":"","pts_psico":22,"nl_psico":"Alto","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":5,"nl_mat":"Bajo"},{"nombre":"VICTORIA VALENTINA PEREZ CHIVICO","rut":"27399103","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"victoriavperezch@gmail.com","mail_uah":"VICTPERE@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"GERALDINE SARAI SABATTINI NAVARRETE","rut":"22449239","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"gerita2007k@gmail.com","mail_uah":"GSABATTI@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":"","pts_psico":20,"nl_psico":"Alto","pts_alfa":3,"nl_alfa":"Bajo","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"IGNACIA MILLARAY SALAZAR PAINEMIL","rut":"22211617","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"ignaciamillaraysalazar@gmail.com","mail_uah":"IGSALAZA@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"MATÍAS ALONSO SANDOVAL JERONIMO","rut":"22508793","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"matiassandoval@liceojfsrecoleta.net","mail_uah":"MASANDOJ@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":3,"alerta":"SI","dificultades":"posible diagnóstico no declarado, económicas y oirganización del tiempo","pts_psico":18,"nl_psico":"Medio","pts_alfa":2,"nl_alfa":"Bajo","pts_mat":3,"nl_mat":"Bajo"},{"nombre":"MARÍA PÍA TORRES VELASCOS","rut":"22722502","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"mariatorres0162@gmail.com","mail_uah":"MATORREV@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":""},{"nombre":"SUSANA MARIANELA TRONCOSO OLMOS","rut":"22303304","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"susana.troncoso2002@gmail.com","mail_uah":"SUTRONCO@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"ANASTACIA CATALINA VILCHES HUGUEÑO","rut":"22503311","carrera":"PSICOLOGÍA","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"a97530749@gmail.com","mail_uah":"ANVILCHE@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":2,"alerta":"","dificultades":"","pts_psico":13,"nl_psico":"Bajo","pts_alfa":1,"nl_alfa":"Bajo","pts_mat":4,"nl_mat":"Bajo"},{"nombre":"FRANCISCO JAVIER ARÁNGUIZ PAVEZ","rut":"22109205","carrera":"TRABAJO SOCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"francisco.aranguiz2006@gmail.com","mail_uah":"FRARANGU@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Masculino","pueblo":"No","trabaja":"Sí","tech":"Computador+internet","prioritario":"","criterios":0,"alerta":"","dificultades":""},{"nombre":"VALENTINA ALEJANDRA CIFUENTES ALBANESE","rut":"22242477","carrera":"TRABAJO SOCIAL","año":"1ro","tipo_adm":"PACE DEMRE","mail_personal":"valentina.cifuentes.h@gmail.com","mail_uah":"VACIFUEA@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No","trabaja":"No","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":""},{"nombre":"BEDJILOVE PIERRE-LOUIS .","rut":"26195041","carrera":"TRABAJO SOCIAL","año":"1ro","tipo_adm":"PACE PACE","mail_personal":"bedjilovepierrelouis336@gmail.com","mail_uah":"BPIERREL@ALUMNOS.UAHURTADO.CL","mentor":"","genero":"Femenino","pueblo":"No lo sé","trabaja":"Sí","tech":"Computador+internet","prioritario":"SI","criterios":1,"alerta":"","dificultades":""},{"nombre":"ALBA ISABEL NOLAN ANGEL","rut":"22344646","carrera":"INGENIERÍA COMERCIAL","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"ALBA.ANGEL.2005@GMAIL.COM","mail_uah":"anolan@alumnos.uahurtado.cl","mentor":""},{"nombre":"ALINA ANTONIA ECHEVERRÍA AGUIRRE","rut":"22202082","carrera":"EDUCACIÓN PARVULARIA","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"alinaecheverria121@gmail.com","mail_uah":"ALECHEVERRIA@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"ALONDRA ANAÍS REYES JEREZ","rut":"22262572","carrera":"TRABAJO SOCIAL","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"AONDRAANAISR@GMAIL.COM","mail_uah":"alreyesj@alumnos.uahurtado.cl","mentor":""},{"nombre":"ALONDRA MACARENA HUERTA HUERTA","rut":"22260507","carrera":"PERIODISMO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"ALONDRA.HUERTA@EDULOSVILOS.CL","mail_uah":"alhuerth@alumnos.uahurtado.cl","mentor":""},{"nombre":"ANA ALEJANDRA DEL CARMEN ROJAS GUTIÉRREZ","rut":"22258440","carrera":"CONTADOR PÚBLICO AUDITOR","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"AR6036402@GMAIL.COM","mail_uah":"anarojas@alumnos.uahurtado.cl","mentor":""},{"nombre":"ANAHÍ ANDREA MIÑO CORREA","rut":"22199717","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"ANAHI.ANDREAM2017@GMAIL.COM","mail_uah":"anminoc@alumnos.uahurtado.cl","mentor":""},{"nombre":"ANASTASIA PAULETTE SILVA BUSTOS","rut":"22302389","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"A.SILVABUSTOS@LICEOBICENTENARIOPB.CL","mail_uah":"ansilvab@alumnos.uahurtado.cl","mentor":""},{"nombre":"ANGELINA DEL CARMEN PÉREZ MUÑOZ","rut":"21875455","carrera":"CONTADOR PÚBLICO AUDITOR","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"ANGELINA.PEREZZ1305@GMAIL.COM","mail_uah":"angepmun@alumnos.uahurtado.cl","mentor":""},{"nombre":"ANTONELLA IGNACIA ZAPATA GUTIERREZ","rut":"21719564","carrera":"EDUCACIÓN PARVULARIA","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"ZAPATAANTONELLA234@GMAIL.COM","mail_uah":"ANZAPATAGU@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"ANTONIA ANDREA MALDONADO PARADA","rut":"22193662","carrera":"CONTADOR PÚBLICO AUDITOR","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"ANTO.ANDREA.MALDONADO@GMAIL.COM","mail_uah":"anmaldop@alumnos.uahurtado.cl","mentor":""},{"nombre":"ANTONIA CATALINA OPAZO CÁCERES","rut":"22226518","carrera":"DERECHO","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"ANTONIAOPAZO@LICEOCOMERCIALSB.CL","mail_uah":"anopazo@alumnos.uahurtado.cl","mentor":""},{"nombre":"ANTONIA ESPERANZA PARRA LLANTÉN","rut":"22227185","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"ANTONIA2006.PARRA@GMAIL.COM","mail_uah":"ANPARRALL@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"ANYEL DOMINIQUE CARREÑO CONTRERAS","rut":"22303372","carrera":"CONTADOR PÚBLICO AUDITOR","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"ANYEL.DOMINIQUE1301@GMAIL.COM","mail_uah":"ancarrec@alumnos.uahurtado.cl","mentor":""},{"nombre":"ARBY RAYEN CARILAO HUENUMÁN","rut":"22325802","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"arbcarilao76@gmail.com","mail_uah":"ACARILAO@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"ARISHA ANTONIA ECHEVERRÍA LABLEE","rut":"22206178","carrera":"ADMINISTRACIÓN PÚBLICA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"ARISHAECHE09@GMAIL.COM","mail_uah":"arecheve@alumnos.uahurtado.cl","mentor":""},{"nombre":"ARLETT ESPERANZA YELENA NAVARRETE TARIFEÑO","rut":"22092134","carrera":"DERECHO","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"ARLETTNAVARRETE17@GMAIL.COM","mail_uah":"arnavart@alumnos.uahurtado.cl","mentor":""},{"nombre":"BELÉN ANTONIA TAPIA VÁSQUEZ","rut":"22320908","carrera":"PSICOLOGÍA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"BELENTAPIA798@GMAIL.COM","mail_uah":"betapiav@alumnos.uahurtado.cl","mentor":""},{"nombre":"BELÉN IGNACIA DÍAZ ESTRADA","rut":"22353024","carrera":"EDUCACIÓN PARVULARIA","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"castroestradabelenignacia@gmail.com","mail_uah":"BEDIAZES@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"BELÉN ROCÍO LAGOS MORALES","rut":"22371633","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"LAGOSBELEN40@GMAIL.COM","mail_uah":"belagosm@alumnos.uahurtado.cl","mentor":""},{"nombre":"BENJAMÍN ALEJANDRO ARÉVALO SOTO","rut":"22105175","carrera":"PEDAGOGÍA EN MUSICA ENS MEDIA","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"BAREVALO817@GMAIL.COM","mail_uah":"BEAREVALO@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"BIANCA ESMERALDA LUNA ESPINOZA","rut":"22153948","carrera":"PSICOLOGÍA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"BIANNCALUNNA14@GMAIL.COM","mail_uah":"biluna@alumnos.uahurtado.cl","mentor":""},{"nombre":"CAMILA JIMENA MARTINEZ CUCHO","rut":"24021965","carrera":"CONTADOR PÚBLICO AUDITOR","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"MARTINEZCCAMILAJIMENA@GMAIL.COM","mail_uah":"camimart@alumnos.uahurtado.cl","mentor":""},{"nombre":"CAMILA LEONOR IBÁÑEZ REYES","rut":"22109279","carrera":"PEDAGOGÍA EN ARTES VISUALES","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"camilona20006@gmail.com","mail_uah":"CAIBANEZRE@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"CAMILA VALENTINA SANCHEZ ARANGUREN","rut":"27163754","carrera":"PSICOLOGÍA","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"CAMILA7ARANGUREN@GMAIL.COM","mail_uah":"casancha@alumnos.uahurtado.cl","mentor":""},{"nombre":"CAROLINA EMILIA GALLEGUILLOS BERRÍOS","rut":"22312838","carrera":"TRABAJO SOCIAL","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"CAROLINA.GALLEGUILLOS222@GMAIL.COM","mail_uah":"cagalleb@alumnos.uahurtado.cl","mentor":""},{"nombre":"CATALINA DEL CARMEN JAURES MONTOYA","rut":"22156926","carrera":"DERECHO","año":"2do","tipo_adm":"COMPLEMENTARIA NEM 30%","mail_personal":"misscatajaures@gmail.com","mail_uah":"CJAURES@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"CATERINA ALEJANDRA CIFUENTES CERDA","rut":"22256762","carrera":"CIENCIA POLÍTICA Y RELACIONES INTERNACIONALES","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"CATECIFUENTES19@GMAIL.COM","mail_uah":"cacifuec@alumnos.uahurtado.cl","mentor":""},{"nombre":"CONSTANZA ANDREA ACEVEDO URZUA","rut":"22173256","carrera":"PSICOLOGIA","año":"2do","tipo_adm":"LISTAS DE ESPERA","mail_personal":"litteestuart@gmail.com","mail_uah":"","mentor":""},{"nombre":"CONSTANZA NOEMÌ FARÍAS PICÓN","rut":"22402189","carrera":"DERECHO","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"CONSTANZAFARIASPICON@GMAIL.COM","mail_uah":"cofariap@alumnos.uahurtado.cl","mentor":""},{"nombre":"CRISTÒBAL TOMÀS TORO MARCHANT","rut":"22198134","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"CRISTOBAII.TOMAS@GMAIL.COM","mail_uah":"crtorom@alumnos.uahurtado.cl","mentor":""},{"nombre":"DAFNE ELIZABETH ROJAS VARGAS","rut":"22009077","carrera":"PEDAGOGÍA EN EDUCACIÓN BÁSICA","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"elizabethrojasvargas333@gmail.com","mail_uah":"DAROJASVA@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"DAMARY ALEXANDRA RIQUELME SOTELO","rut":"22237493","carrera":"PED. LENGUA CASTELL Y COMUNIC","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"dam4ryriqu3lme@gmail.com","mail_uah":"DARIQUELMESO@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"DANIELA ANELISSE HERNÁNDEZ ABBATE","rut":"22368079","carrera":"PEDAGOGÍA EN EDUCACIÓN BÁSICA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"DANIELA.HERNANDEZ@DAEMCALLELARGA.CL","mail_uah":"danihern@alumnos.uahurtado.cl","mentor":""},{"nombre":"DANIELA FERNANDA MEDEL VIVAR","rut":"21994541","carrera":"PEDAGOGÍA EN EDUCACIÓN BÁSICA","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"danielavivar9597@gmail.com","mail_uah":"DAMEDELVI@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"DAVID LOZADA CASTAÑO","rut":"24813267","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"DAVIDLOZADA@INSUCODOS.CL","mail_uah":"dlozada@alumnos.uahurtado.cl","mentor":""},{"nombre":"DENISSE VALENTINA LONCOCHINO CIFUENTES","rut":"22155907","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"DENISSELONCOCHINOC@LICEOJOSEFINA.CL","mail_uah":"dloncoch@alumnos.uahurtado.cl","mentor":""},{"nombre":"DENISSE VANESA MIRANDA VERGARA","rut":"22134841","carrera":"INGENIERÍA COMERCIAL","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"DENISSEMIRANDA.V01@GMAIL.COM","mail_uah":"demiranv@alumnos.uahurtado.cl","mentor":""},{"nombre":"DIEGO GERARDO ÁLVAREZ CONCHA","rut":"22283774","carrera":"INGENIERÍA COMERCIAL","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"DIEGOALVAREZGER25@GMAIL.COM","mail_uah":"dialvarc@alumnos.uahurtado.cl","mentor":""},{"nombre":"DIEGO IGNACIO HUALAMÁN VILLANUEVA","rut":"22152220","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"DIEGOHUALAMAN@INSUCODOS.CL","mail_uah":"dhualama@alumnos.uahurtado.cl","mentor":""},{"nombre":"DOMINGO RAÚL ANDRADES BELTRÁN","rut":"22236745","carrera":"PED. LENGUA CASTELL Y COMUNIC","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"Domingoandres725@gmail.com","mail_uah":"DANDRADES@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"DYLAN ANDRES ORTIZ ALIAGA","rut":"22066937","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"dylanortiz2018@gmail.com","mail_uah":"DYORTIZ@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"ELIANYS MICHELLE HERNANDEZ MARTINEZ","rut":"28316715","carrera":"PERIODISMO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"HERNANDEZELIANYS438@GMAIL.COM","mail_uah":"elhernan@alumnos.uahurtado.cl","mentor":""},{"nombre":"EMILIA PAZ PERALTA NÚÑEZ","rut":"22179287","carrera":"PEDAGOGÍA EN INGLÉS","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"EMILIAPERALTANUNEZ28@GMAIL.COM","mail_uah":"eperalta@alumnos.uahurtado.cl","mentor":""},{"nombre":"ESTEBAN FELIPE FUENTES MUÑOZ","rut":"22235543","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"EFUENTES.MUNOZ@ESTUDIANTE.REDUCA.CL","mail_uah":"esfuentm@alumnos.uahurtado.cl","mentor":""},{"nombre":"EVAN GALLEGUILLOS PARRAGUEZ","rut":"22216026","carrera":"PEDAGOGÍA EN HISTORIA Y CCSS","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"EVAN.A.J.G.P@GMAIL.COM","mail_uah":"VGALLEGUILLOS@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"EXEQUIEL ALEJANDRO GONZÁLEZ ALARCÓN","rut":"21852491","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"2do","tipo_adm":"REPOSTULACIONES","mail_personal":"GONZALEZXALARCON@GMAIL.COM","mail_uah":"exgonzal@alumnos.uahurtado.cl","mentor":""},{"nombre":"FAÏCA NAZARD .","rut":"27169011","carrera":"CONTADOR PÚBLICO AUDITOR","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"NAZARDFAICA@GMAIL.COM","mail_uah":"fnazard@alumnos.uahurtado.cl","mentor":""},{"nombre":"FERNANDA PAZ VALENZUELA SEPÚLVEDA","rut":"22226790","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"FERVALENZUELA5468@GMAIL.COM","mail_uah":"fevalenz@alumnos.uahurtado.cl","mentor":""},{"nombre":"FRANCO DANIEL VILLABLANCA CISTERNAS","rut":"22136670","carrera":"PEDAGOGÍA EN INGLES","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"KAKOYVICTORIA04@GMAIL.COM","mail_uah":"FVILLABLANCA@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"GERALDINE MILLARAY VARGAS LÓPEZ","rut":"22131078","carrera":"PSICOLOGÍA","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"GERXLDINEMILLARAY@GMAIL.COM","mail_uah":"gevargal@alumnos.uahurtado.cl","mentor":""},{"nombre":"GIOVANNI ALEJANDRO CASTRO PIZARRO","rut":"22211767","carrera":"INGENIERÍA COMERCIAL","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"MANNYACASTRO2006@GMAIL.COM","mail_uah":"gicastrp@alumnos.uahurtado.cl","mentor":""},{"nombre":"HECTOR RUBIO ZUÑIGA","rut":"22166720","carrera":"PED. LENGUA CASTELL Y COMUNIC","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"HECTOR.RZ2025@GMAIL.COM","mail_uah":"HERUBIO@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"IAN AARON PIÑA PÉREZ","rut":"22244644","carrera":"PEDAGOGÍA EN INGLES","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"IANPINA@LICEOJFSRECOLETA.NET","mail_uah":"IPINA@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"IGNACIA ALMENDRA ANAIS RAMOS DINAMARCA","rut":"22315571","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"ignaciaramos834@gmail.com","mail_uah":"IGRAMOS@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"IGNACIA ANTONIA DEL ROSARIO RUBILAR VARAS","rut":"22200174","carrera":"DERECHO","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"IGNACIARUBILAR4@GMAIL.COM","mail_uah":"irubilar@alumnos.uahurtado.cl","mentor":""},{"nombre":"ISABELLA VALENTINA ARANEDA CONTRERAS","rut":"22279325","carrera":"PEDAGOGÍA EN MÚSICA ENS MEDIA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"ISABELLAARANEDAS593@GMAIL.COM","mail_uah":"isaranec@alumnos.uahurtado.cl","mentor":""},{"nombre":"JAIME OMAR GONZÁLEZ DÍAZ","rut":"22129383","carrera":"CONTADOR PÚBLICO AUDITOR","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"JAIME.GONZALEZ8733@GMAIL.COM","mail_uah":"jaimgonz@alumnos.uahurtado.cl","mentor":""},{"nombre":"JANICE ALEJANDRA BEIZA GARBARINO","rut":"22367894","carrera":"EDUCACIÓN PARVULARIA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"JANICEBEIZA8@GMAIL.COM","mail_uah":"jbeiza@alumnos.uahurtado.cl","mentor":""},{"nombre":"JANIS YASISKA HERNÁNDEZ VALDÉS","rut":"22353556","carrera":"CONTADOR PÚBLICO AUDITOR","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"YASISKAHV@GMAIL.COM","mail_uah":"jahernav@alumnos.uahurtado.cl","mentor":""},{"nombre":"JAVIER ALEJANDRO HERNÁNDEZ DURAN","rut":"27871306","carrera":"INGENIERÍA COMERCIAL","año":"2do","tipo_adm":"REPOSTULACIONES","mail_personal":"JAVIERHERNANDEZ13062006@GMAIL.COM","mail_uah":"jahernad@alumnos.uahurtado.cl","mentor":""},{"nombre":"JAZMÍN ELISA SIERRA TORO","rut":"22282696","carrera":"PEDAGOGÍA EN EDUCACIÓN BÁSICA","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"J.ELISASIERRATORO@GMAIL.COM","mail_uah":"JSIERRA@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"JOAQUÍN FERNANDO INFANTE GALAZ","rut":"22369444","carrera":"PEDAGOGÍA EN MÚSICA ENS MEDIA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"JOAQUININFANTEGALAZ@GMAIL.COM","mail_uah":"joinfant@alumnos.uahurtado.cl","mentor":""},{"nombre":"JORGE IGNACIO ECHEVERRÍA OLATE","rut":"22132367","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"JORGEECHEVERRIAOLATE@GMAIL.COM","mail_uah":"joecheve@alumnos.uahurtado.cl","mentor":""},{"nombre":"JOSEFINA MELISSA ROSALES CATRUPAY","rut":"22323023","carrera":"SOCIOLOGÍA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"JOSEFINAMELISSA0602@GMAIL.COM","mail_uah":"jorosalc@alumnos.uahurtado.cl","mentor":""},{"nombre":"JULIAN ORTIZ MARCELINO","rut":"22211787","carrera":"PED. LENGUA CASTELL Y COMUNIC","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"JUL1KLO17@GMAIL.COM","mail_uah":"JULORTIZ@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"KARLA BELÉN GARRIDO CHANDÍA","rut":"22418245","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"KARLAGARRIDO321@GMAIL.COM","mail_uah":"kagarrid@alumnos.uahurtado.cl","mentor":""},{"nombre":"KATTALINA ELIZABETH OLIVARES BASUALTO","rut":"22241742","carrera":"PEDAGOGÍA EN INGLÉS","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"OLIVARESKATTALINA@GMAIL.COM","mail_uah":"kolivare@alumnos.uahurtado.cl","mentor":""},{"nombre":"KRISBET HARLEM CAPOTE GUILLEN","rut":"28050657","carrera":"CIENCIA POLÍTICA Y RELACIONES INTERNACIONALES","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"CKRISBET@GMAIL.COM","mail_uah":"kcapote@alumnos.uahurtado.cl","mentor":""},{"nombre":"LUIS ALFONZO PALACIOS LARGACHA","rut":"26043314","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"LUISPALACIOS0099@GMAIL.COM","mail_uah":"lupalaci@alumnos.uahurtado.cl","mentor":""},{"nombre":"MAICOL ALBERTO RAMIREZ MONCADA","rut":"22177709","carrera":"CONTADOR PÚBLICO AUDITOR","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"MAICOL.RAMIREZ.LBTP@GMAIL.COM","mail_uah":"maicrami@alumnos.uahurtado.cl","mentor":""},{"nombre":"MARÍA CONSTANZA CARRASCO VELÁSQUEZ","rut":"22256585","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"MARIACARRASCOV073@GMAIL.COM","mail_uah":"macarrav@alumnos.uahurtado.cl","mentor":""},{"nombre":"MARÍA FRANCISCA VIVANCO SANDOVAL","rut":"22270372","carrera":"PSICOLOGÍA","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"KIMDOYOUNG1993@GMAIL.COM","mail_uah":"mavivanc@alumnos.uahurtado.cl","mentor":""},{"nombre":"MARÍA JOSÉ SÁNCHEZ SAMARIN","rut":"22181036","carrera":"ADMINISTRACIÓN PÚBLICA","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"MSANCHEZSAMARIN@GMAIL.COM","mail_uah":"marissam@alumnos.uahurtado.cl","mentor":""},{"nombre":"MARÍA PAZ DROGUETT VIDAL","rut":"22276614","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"MARIADROGUETT.ESTUDIOS2024@GMAIL.COM","mail_uah":"madrogue@alumnos.uahurtado.cl","mentor":""},{"nombre":"MARÍA PAZ ANTONIA CAJAS NAMUNCURA","rut":"21948388","carrera":"PEDAGOGÍA EN FILOSOFÍA","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"MARIAPAZCAJAS09@GMAIL.COM","mail_uah":"MACAJAS@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"MARIA VICTORIA RUIZ ROSSELL","rut":"27874315","carrera":"PSICOLOGÍA","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"VICTORIARUIZ23022006@GMAIL.COM","mail_uah":"maruizr@alumnos.uahurtado.cl","mentor":""},{"nombre":"MARIANA ISABEL SANCHEZ AÑEZ","rut":"28458020","carrera":"PEDAGOGÍA EN EDUCACIÓN BÁSICA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"MARIANAISA28111@GMAIL.COM","mail_uah":"marisane@alumnos.uahurtado.cl","mentor":""},{"nombre":"MARION ESPERANZA LARA RODRÍGUEZ","rut":"22302241","carrera":"PEDAGOGÍA EN ARTES VISUALES","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"sump.marionlara@gmail.com","mail_uah":"MALARARO@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"MARTINA ORTEGA","rut":"22305714","carrera":"PEDAGOGÍA EN MUSICA ENS MEDIA","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"martinagarridolol@gmail.com","mail_uah":"MARORTEGA@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"MARTINA ANAÍS HUANQUILEN PAVEZ","rut":"22430396","carrera":"PSICOLOGÍA","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"MARTINA.HUANQUILEN.P@ESTUDIANTES.INSTITUTOBERNARDOOHIGGINS.CL","mail_uah":"mhuanqui@alumnos.uahurtado.cl","mentor":""},{"nombre":"MARTINA ANTONIA PONCE MORENO","rut":"22142876","carrera":"PEDAGOGÍA EN ARTES VISUALES","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"MARTINA.PONCE.616@GMAIL.COM","mail_uah":"martponc@alumnos.uahurtado.cl","mentor":""},{"nombre":"MARTINA IGNACIA HENRIQUEZ CAMPOS","rut":"22379514","carrera":"DERECHO","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"MARTINAHENRIQUEZ39@GMAIL.COM","mail_uah":"mahenric@alumnos.uahurtado.cl","mentor":""},{"nombre":"MARTINA IGNACIA RODRÍGUEZ SANTANA","rut":"22204941","carrera":"LICENCIATURA LENGUA Y LITERAT","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"MARTINASANTANA485@GMAIL.COM","mail_uah":"martrodr@alumnos.uahurtado.cl","mentor":""},{"nombre":"MARTINA IVANIA TAPIA RODRÍGUEZ","rut":"22268580","carrera":"EDUCACIÓN PARVULARIA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"MARTI.T.RODRIGUEZ@GMAIL.COM","mail_uah":"matapiar@alumnos.uahurtado.cl","mentor":""},{"nombre":"MATIAS ARMANDO SOTO ARREDONDO","rut":"22164785","carrera":"INGENIERÍA CIVIL PLAN COMÚN","año":"2do","tipo_adm":"COMPLEMENTARIA NEM 30%","mail_personal":"MATIAS.SOTO.A20@GMAIL.COM","mail_uah":"MASOTOARR@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"MATIAS RODRIGO PETRELLI VALENZUELA","rut":"21971991","carrera":"PSICOLOGÍA","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"MATIAS.PETRELLI.VALENZUELA@GMAIL.COM","mail_uah":"mpetrell@alumnos.uahurtado.cl","mentor":""},{"nombre":"MAYTE ANNAIS SAN MARTÍN MUÑOZ","rut":"22000079","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"SANMARTINMAYTE384@GMAIL.COM","mail_uah":"MASANMARTINMU@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"MICHELLE IGNACIA GUAICO FAJARDO","rut":"22360410","carrera":"GEOGRAFÍA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"MICHELLEGUAICO050@GMAIL.COM","mail_uah":"mguaico@alumnos.uahurtado.cl","mentor":""},{"nombre":"MILLARAY ANAYS JIMENEZ OYARZO","rut":"22067287","carrera":"PSICOLOGÍA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"MILLARAYJIMENEZ118@GMAIL.COM","mail_uah":"mijimeno@alumnos.uahurtado.cl","mentor":""},{"nombre":"MONSERRAT ANAHIS PÉREZ VARGAS","rut":"22313107","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"MONSERRATPEREZVARGAS@GMAIL.COM","mail_uah":"moperez@alumnos.uahurtado.cl","mentor":""},{"nombre":"MURYEL AYLIN TRONCOSO BUSTAMANTE","rut":"21885266","carrera":"PSICOLOGIA","año":"2do","tipo_adm":"LISTAS DE ESPERA","mail_personal":"dylantb561@gmail.com","mail_uah":"","mentor":""},{"nombre":"NATALIA VANESSA GODOY ARANEDA","rut":"22180173","carrera":"LICENCIATURA LENGUA Y LITERAT","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"NATALIAGODOYA2006@GMAIL.COM","mail_uah":"nagodoya@alumnos.uahurtado.cl","mentor":""},{"nombre":"NATASHA CAROLINA AGUILLÓN VERGARA","rut":"22347756","carrera":"PSICOLOGÍA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"NATASHAAGUILLON0903@GMAIL.COM","mail_uah":"naguillo@alumnos.uahurtado.cl","mentor":""},{"nombre":"NAYADET VICTORIA LLONCÓN TRALCAL","rut":"22251926","carrera":"PSICOLOGÍA","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"NAYADETLLONCON@GMAIL.COM","mail_uah":"nlloncon@alumnos.uahurtado.cl","mentor":""},{"nombre":"NEIKAR ALONDRA PEREZ RIERA","rut":"27164049","carrera":"INGENIERÍA COMERCIAL","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"NEIKAR13PEREZ@GMAIL.COM","mail_uah":"neperez@alumnos.uahurtado.cl","mentor":""},{"nombre":"NICOL BELÉN NÚÑEZ CORNEJO","rut":"21925443","carrera":"INGENIERÍA COMERCIAL","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"NUNEZCORNEJONICOLBELEN@GMAIL.COM","mail_uah":"ninunezc@alumnos.uahurtado.cl","mentor":""},{"nombre":"PAULA SCARLETT ANDRADE MOYA","rut":"22207336","carrera":"PERIODISMO","año":"2do","tipo_adm":"COMPLEMENTARIA NEM 30%","mail_personal":"p.aulaandradem23@gmail.com","mail_uah":"PAANDRADE@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"PIERINA LUCERO REA OLORTEGUI","rut":"27137016","carrera":"CONTADOR PÚBLICO AUDITOR","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"PIERI.REA.8@GMAIL.COM","mail_uah":"prea@alumnos.uahurtado.cl","mentor":""},{"nombre":"RAFAELLA ANGELINA DIANTA BEIZA","rut":"22303649","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"BEIZARAFAELLA@GMAIL.COM","mail_uah":"rdianta@alumnos.uahurtado.cl","mentor":""},{"nombre":"RAIZA ANDREA ORTEGA ASTUDILLO","rut":"21943824","carrera":"EDUCACIÓN PARVULARIA","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"RAIZA.ORTEGA29012018@GMAIL.COM","mail_uah":"RAORTEGA@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"RAYEN MAYARA MUÑOZ BELLO","rut":"22196338","carrera":"PED. LENGUA CASTELL Y COMUNIC","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"RAYENMMB28@GMAIL.COM","mail_uah":"ramunozb@alumnos.uahurtado.cl","mentor":""},{"nombre":"ROCIO TAMARA PALMA CANO","rut":"22159846","carrera":"TRABAJO SOCIAL","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"ROCIO.PALMA.CANO.13@GMAIL.COM","mail_uah":"ropalmac@alumnos.uahurtado.cl","mentor":""},{"nombre":"RODNNYRE ALEJANDRA BOZO FARIA","rut":"26819079","carrera":"PSICOLOGÍA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"RODNNYREBOZOFARIA@GMAIL.COM","mail_uah":"rbozo@alumnos.uahurtado.cl","mentor":""},{"nombre":"ROSA ELVIRA MORALES LEIVA","rut":"21951190","carrera":"DERECHO","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"ROSITAMORALES782@GMAIL.COM","mail_uah":"romorall@alumnos.uahurtado.cl","mentor":""},{"nombre":"SAMANTHA AIDÉE TOLEDO LUENGO","rut":"22220433","carrera":"PEDAGOGÍA EN MUSICA ENS MEDIA","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"samitatolu@gmail.com","mail_uah":"SATOLEDO@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"SAMARIA POBLETE","rut":"22314117","carrera":"PEDAGOGÍA EN BIOLOGÍA Y CIENCIAS NATURALES EN EDUCACIÓN MEDIA","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"sampoblete666@gmail.com","mail_uah":"SAPOBLETE@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"SENDY JOCELYN .","rut":"25484302","carrera":"DERECHO","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"MIFAELAJOCELYN@GMAIL.COM","mail_uah":"sjocelyn@alumnos.uahurtado.cl","mentor":""},{"nombre":"SOFIA ALEJANDRA ROJAS PAVEZ","rut":"22116456","carrera":"PEDAGOGÍA EN INGLÉS","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"SROJASP16@GMAIL.COM","mail_uah":"sorojasp@alumnos.uahurtado.cl","mentor":""},{"nombre":"SOFÍA MILLARAY GIANONI HERNÁNDEZ","rut":"22391685","carrera":"CONTADOR PÚBLICO AUDITOR","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"SOFIAGIANONI5@GMAIL.COM","mail_uah":"sgianoni@alumnos.uahurtado.cl","mentor":""},{"nombre":"STEFANIA ALEJANDRA SAAVEDRA BEAS","rut":"22134707","carrera":"PEDAGOGÍA EN HISTORIA Y CCSS","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"STEF524524@GMAIL.COM","mail_uah":"SSAAVEDRA@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"STEPHANNY GRACIELA JIMÉNEZ REYES","rut":"22084545","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"JIMENEZSTEPHANNY965@GMAIL.COM","mail_uah":"stjimene@alumnos.uahurtado.cl","mentor":""},{"nombre":"TADISH MELANNY JULLYETTE ORTIZ CORTÉS","rut":"22331373","carrera":"ADMINISTRACIÓN PÚBLICA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"CJULIETH864@GMAIL.COM","mail_uah":"taortiz@alumnos.uahurtado.cl","mentor":""},{"nombre":"TAIS SASHENKA ANGELY GARCIA PASSONI","rut":"23772306","carrera":"PEDAGOGÍA EN INGLÉS","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"TAISGAP@GMAIL.COM","mail_uah":"tagarcip@alumnos.uahurtado.cl","mentor":""},{"nombre":"THIARE ANDREA NAVARRETE GONZÁLEZ","rut":"22380600","carrera":"INGENIERÍA COMERCIAL","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"NAVARRETETHIARE098@GMAIL.COM","mail_uah":"tnavarre@alumnos.uahurtado.cl","mentor":""},{"nombre":"TRINIDAD ANTONIA CANIULAO ULLOA","rut":"22246541","carrera":"PSICOLOGIA","año":"2do","tipo_adm":"LISTAS DE ESPERA","mail_personal":"trinynona26@gmail.com","mail_uah":"","mentor":""},{"nombre":"VALENTINA ANAÍZ CALDERÓN VILLALOBOS","rut":"22153130","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"VALECITAVILLALOBOS123@GMAIL.COM","mail_uah":"VACALDERON@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"VALENTINA PAZ ARRAÑO TELLO","rut":"22283156","carrera":"PSICOLOGÍA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"VALU4932@GMAIL.COM","mail_uah":"varrano@alumnos.uahurtado.cl","mentor":""},{"nombre":"VICENTE ISMAEL ARÁNGUIZ HENRÍQUEZ","rut":"22268575","carrera":"CONTADOR PÚBLICO AUDITOR","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"VICENTEARANGUIZ02@GMAIL.COM","mail_uah":"viarangu@alumnos.uahurtado.cl","mentor":""},{"nombre":"VICENTE THOMAS GONZÁLEZ SEPÚLVEDA","rut":"22282424","carrera":"PEDAGOGÍA EN HISTORIA Y CCSS","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"vichogonzalez2021@gmail.com","mail_uah":"VIGONZALEZSE@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"VITORIA ISABELA PERAGINE ATENCIO","rut":"27452270","carrera":"INGENIERÍA COMERCIAL","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"TORIPERAGINE@GMAIL.COM","mail_uah":"vperagin@alumnos.uahurtado.cl","mentor":""},{"nombre":"YAMILET SELENE LEMÚN TRONCOSO","rut":"22268900","carrera":"DERECHO","año":"2do","tipo_adm":"PACE-PACE","mail_personal":"SELENELEMUN@GMAIL.COM","mail_uah":"ylemun@alumnos.uahurtado.cl","mentor":""},{"nombre":"YANNARA DANYELA RAIGUAN QUINTUL","rut":"22291758","carrera":"PEDAGOGÍA EN MÚSICA ENS MEDIA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"YRAIQUINTUL56@GMAIL.COM","mail_uah":"yraiguan@alumnos.uahurtado.cl","mentor":""},{"nombre":"YAREN BRAYAN CASTILLO QUINTANILLA","rut":"23611537","carrera":"CONTADOR PÚBLICO AUDITOR","año":"2do","tipo_adm":"REPOSTULACIONES","mail_personal":"YARENCASTILLOQ@GMAIL.COM","mail_uah":"yacastil@alumnos.uahurtado.cl","mentor":""},{"nombre":"YHOALIBETH SEPÚLVEDA","rut":"22120112","carrera":"PEDAGOGÍA EN EDUCACIÓN DIFERENCIAL CON MENCIÓN EN DIFICULTADES DEL APRENDIZAJE ESCOLAR","año":"2do","tipo_adm":"ELIJO SER DOCENTE","mail_personal":"yhoalibeth.sepulveda.jara@gmail.com","mail_uah":"YHSEPULVEDA@ALUMNOS.UAHURTADO.CL","mentor":""},{"nombre":"YOFREE EMILIO MATUS SOTOMAYOR","rut":"23041059","carrera":"PSICOLOGÍA","año":"2do","tipo_adm":"PACE - DEMRE","mail_personal":"EMILIO10MATUS@GMAIL.COM","mail_uah":"ymatus@alumnos.uahurtado.cl","mentor":""}];
+
+// ── DATOS EN VIVO (bitácora + promedios) ───────────────────
 const PROXY = "https://corsproxy.io/?";
 const URLS = {
   bitacora:  PROXY + encodeURIComponent("https://script.google.com/macros/s/AKfycbxudtH0wQchqWNPdHb60R0elBb27d8qFWqcXwRzu3-BnwtO_09P-7gghaHuHycUD1uA/exec"),
-  promedios: PROXY + encodeURIComponent("https://script.google.com/macros/s/AKfycbxVNdhA4vEn426YIOxg3kZ3nG9yRDKo4Fq2tyb_2K2ub1x-Ys1SFGd5bNDNrzjbpp9h/exec"),
-  libro:     PROXY + encodeURIComponent("https://script.google.com/macros/s/AKfycbyAfBOtbyeht7icgRgDXiV7BxZX4poFj_e9sN8TL9QTSAW6pjlJJ05JS8aZE8RTR99I/exec")
+  promedios: PROXY + encodeURIComponent("https://script.google.com/macros/s/AKfycbxVNdhA4vEn426YIOxg3kZ3nG9yRDKo4Fq2tyb_2K2ub1x-Ys1SFGd5bNDNrzjbpp9h/exec")
 };
 
-let DATA = { bit: null, prom: null, libro: null };
+let LIVE = { bit: null, prom: null };
 let charts = {};
+let selectedRut = null;
+let filtrados = [...LIBRO];
 
-function setStatus(id, ok, msg) {
-  document.getElementById('dot-' + id).className = 'status-dot ' + (ok ? 'ok' : 'err');
-  document.getElementById('status-' + id).textContent = msg;
-}
+// ── LOOKUP RÁPIDO ───────────────────────────────────────────
+const libroByRut = {};
+LIBRO.forEach(s => { if(s.rut) libroByRut[s.rut] = s; });
 
-async function fetchJSON(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  return res.json();
-}
+// ── CARGA REMOTA ────────────────────────────────────────────
+async function loadRemote() {
+  document.getElementById('dot-bit').className = 'sdot loading';
+  document.getElementById('dot-prom').className = 'sdot loading';
+  document.getElementById('st-bit').textContent = 'Conectando...';
+  document.getElementById('st-prom').textContent = 'Cargando...';
 
-async function loadAll() {
-  ['bit','prom','lib'].forEach(id => {
-    document.getElementById('dot-' + id).className = 'status-dot loading';
-  });
-  document.getElementById('status-bit').textContent  = 'Conectando bitácora...';
-  document.getElementById('status-prom').textContent = 'Cargando promedios...';
-  document.getElementById('status-lib').textContent  = 'Cargando libro de clases...';
-
-  const results = await Promise.allSettled([
-    fetchJSON(URLS.bitacora),
-    fetchJSON(URLS.promedios),
-    fetchJSON(URLS.libro)
+  const [r1, r2] = await Promise.allSettled([
+    fetch(URLS.bitacora).then(r=>r.json()),
+    fetch(URLS.promedios).then(r=>r.json())
   ]);
 
-  if (results[0].status === 'fulfilled') {
-    DATA.bit = results[0].value;
-    const nE = DATA.bit.estudiantes ? DATA.bit.estudiantes.length : 0;
-    const nP = DATA.bit.sesiones_psico ? DATA.bit.sesiones_psico.length : 0;
-    setStatus('bit', true, 'Bitácora: ' + nE + ' estudiantes · ' + nP + ' sesiones psico');
-  } else { setStatus('bit', false, 'Error bitácora: ' + results[0].reason.message); }
+  if (r1.status === 'fulfilled') {
+    LIVE.bit = r1.value;
+    const np = (LIVE.bit.sesiones_psico||[]).filter(s=>s.asiste==='SI').length;
+    document.getElementById('dot-bit').className = 'sdot ok';
+    document.getElementById('st-bit').textContent = 'Bitácora: ' + (LIVE.bit.estudiantes||[]).length + ' est. · ' + np + ' sesiones psico';
+    document.getElementById('g-psico').textContent = np;
+  } else {
+    document.getElementById('dot-bit').className = 'sdot err';
+    document.getElementById('st-bit').textContent = 'Error bitácora';
+  }
 
-  if (results[1].status === 'fulfilled') {
-    DATA.prom = results[1].value;
-    setStatus('prom', true, 'Promedios: ' + (DATA.prom.notas ? DATA.prom.notas.length : 0) + ' estudiantes');
-  } else { setStatus('prom', false, 'Error promedios: ' + results[1].reason.message); }
+  if (r2.status === 'fulfilled') {
+    LIVE.prom = r2.value;
+    document.getElementById('dot-prom').className = 'sdot ok';
+    document.getElementById('st-prom').textContent = 'Promedios: ' + (LIVE.prom.notas||[]).length + ' estudiantes';
+  } else {
+    document.getElementById('dot-prom').className = 'sdot err';
+    document.getElementById('st-prom').textContent = 'Error promedios';
+  }
 
-  if (results[2].status === 'fulfilled') {
-    DATA.libro = results[2].value;
-    setStatus('lib', true, 'Libro: ' + (DATA.libro.caracterizacion ? DATA.libro.caracterizacion.length : 0) + ' registros');
-  } else { setStatus('lib', false, 'Error libro: ' + results[2].reason.message); }
-
-  buildAll();
+  buildAlertas();
+  if (selectedRut) selectEst(selectedRut);
+  renderSes();
 }
 
-function buildAll() {
-  updateMetrics();
-  buildCharts();
-  populateFilters();
-  renderSesiones();
-  renderEstudiantes();
-  renderNotas();
-  renderAlertas();
+// ── HELPERS ─────────────────────────────────────────────────
+function nlBadge(nl) {
+  if (!nl) return '<span class="badge" style="background:#f1efe8;color:#888">—</span>';
+  const c = nl==='Alto'?'bg':nl==='Medio'?'ba':'br';
+  return `<span class="badge ${c}">${nl}</span>`;
+}
+function critBadge(n) {
+  n = n||0;
+  if (n===0) return `<span class="badge bg">0</span>`;
+  if (n===1) return `<span class="badge ba">1</span>`;
+  return `<span class="badge br">${n}</span>`;
+}
+function getPromByRut(rut) {
+  if (!LIVE.prom || !LIVE.prom.notas) return null;
+  return LIVE.prom.notas.find(n => String(n.rut) === String(rut)) || null;
+}
+function getSesionesEst(rut) {
+  if (!LIVE.bit || !LIVE.bit.sesiones_psico) return [];
+  return LIVE.bit.sesiones_psico.filter(s => String(s.rut) === String(rut));
 }
 
-function updateMetrics() {
-  const est   = DATA.bit && DATA.bit.estudiantes ? DATA.bit.estudiantes.length : 0;
-  const psico = DATA.bit && DATA.bit.sesiones_psico ? DATA.bit.sesiones_psico.filter(s => s.asiste === 'SI').length : 0;
-  const notas = DATA.prom && DATA.prom.notas ? DATA.prom.notas : [];
-  const val   = notas.filter(n => n.promedio_simple > 0);
-  const prom  = val.length ? (val.reduce((a,b) => a + b.promedio_simple, 0) / val.length).toFixed(2) : '—';
-  const bajo  = notas.filter(n => n.promedio_simple > 0 && n.promedio_simple < 4.0).length;
-
-  document.getElementById('tot-est').textContent   = est;
-  document.getElementById('tot-psico').textContent = psico;
-  document.getElementById('tot-prom').textContent  = prom;
-  document.getElementById('tot-bajo').textContent  = bajo;
-  document.getElementById('n-prom').textContent    = prom;
-  document.getElementById('n-bajo').textContent    = bajo;
-  document.getElementById('n-alto').textContent    = notas.filter(n => n.promedio_simple >= 5.5).length;
-  document.getElementById('a-bajo4').textContent   = bajo;
-  document.getElementById('a-inasist').textContent = DATA.bit && DATA.bit.sesiones_psico ? DATA.bit.sesiones_psico.filter(s => s.asiste === 'NO').length : '—';
-  document.getElementById('a-pend').textContent    = notas.filter(n => n.cursos_pendientes > 0).length;
-  const rutConSesion = new Set((DATA.bit && DATA.bit.sesiones_psico || []).filter(s=>s.asiste==='SI').map(s=>s.rut));
-  document.getElementById('a-sinsesion').textContent = est > 0 ? est - rutConSesion.size : '—';
-}
-
-function buildCharts() {
-  const psico = DATA.bit && DATA.bit.sesiones_psico ? DATA.bit.sesiones_psico.length : 0;
-  const mat   = DATA.bit && DATA.bit.sesiones_mat   ? DATA.bit.sesiones_mat.length   : 0;
-  const alfa  = DATA.bit && DATA.bit.sesiones_alfa  ? DATA.bit.sesiones_alfa.length  : 0;
-
-  if (charts.areas) charts.areas.destroy();
-  charts.areas = new Chart(document.getElementById('c-areas'), {
-    type: 'bar',
-    data: { labels: ['Psicoeducativo','Matemática','Alfabetización'],
-      datasets: [{ data: [psico,mat,alfa], backgroundColor: ['#7F77DD','#378ADD','#1D9E75'], borderRadius:4 }] },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
-      scales: { y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.06)'}}, x:{ticks:{font:{size:10}},grid:{display:false}} } }
-  });
-
-  const notas = DATA.prom && DATA.prom.notas ? DATA.prom.notas : [];
-  const b4 = notas.filter(n => n.promedio_simple > 0 && n.promedio_simple < 4.0).length;
-  const m  = notas.filter(n => n.promedio_simple >= 4.0 && n.promedio_simple < 5.0).length;
-  const al = notas.filter(n => n.promedio_simple >= 5.0).length;
-
-  if (charts.ndist) charts.ndist.destroy();
-  charts.ndist = new Chart(document.getElementById('c-notas-dist'), {
-    type: 'doughnut',
-    data: { labels: ['Bajo 4.0 ('+b4+')','4.0–5.0 ('+m+')','Sobre 5.0 ('+al+')'],
-      datasets: [{ data:[b4,m,al], backgroundColor:['#E24B4A','#BA7517','#639922'], borderWidth:0 }] },
-    options: { responsive:true, maintainAspectRatio:false, cutout:'60%',
-      plugins: { legend: { position:'bottom', labels:{font:{size:10},boxWidth:8,padding:6} } } }
-  });
-
-  const carr = {};
-  (DATA.bit && DATA.bit.estudiantes || []).forEach(e => { if(e.carrera) carr[e.carrera]=(carr[e.carrera]||0)+1; });
-  const top = Object.entries(carr).sort((a,b)=>b[1]-a[1]).slice(0,8);
-
-  if (charts.carr) charts.carr.destroy();
-  charts.carr = new Chart(document.getElementById('c-carreras'), {
-    type: 'bar',
-    data: { labels: top.map(x=>x[0].length>24?x[0].substring(0,24)+'…':x[0]),
-      datasets: [{ data:top.map(x=>x[1]), backgroundColor:'#378ADD', borderRadius:3 }] },
-    options: { responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}},
-      scales: { x:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.06)'}}, y:{ticks:{font:{size:9}},grid:{display:false}} } }
-  });
-
-  const ses = DATA.bit && DATA.bit.sesiones_psico ? DATA.bit.sesiones_psico : [];
-  const si  = ses.filter(s=>s.asiste==='SI').length;
-  const no  = ses.filter(s=>s.asiste==='NO').length;
-
-  if (charts.asist) charts.asist.destroy();
-  charts.asist = new Chart(document.getElementById('c-asist'), {
-    type: 'doughnut',
-    data: { labels:['Asistió ('+si+')','No asistió ('+no+')'],
-      datasets: [{ data:[si,no], backgroundColor:['#639922','#E24B4A'], borderWidth:0 }] },
-    options: { responsive:true, maintainAspectRatio:false, cutout:'60%',
-      plugins: { legend: { position:'bottom', labels:{font:{size:10},boxWidth:8,padding:6} } } }
-  });
-}
-
-function populateFilters() {
-  const profs=new Set(), cars=new Set(), carsN=new Set();
-  (DATA.bit && DATA.bit.sesiones_psico||[]).forEach(s=>{if(s.profesional)profs.add(s.profesional);});
-  (DATA.bit && DATA.bit.estudiantes||[]).forEach(e=>{if(e.carrera)cars.add(e.carrera);});
-  (DATA.prom && DATA.prom.notas||[]).forEach(n=>{if(n.carrera)carsN.add(n.carrera.replace(/ v\d{4}$/,''));});
-
-  const sp=document.getElementById('fil-prof');
-  sp.innerHTML='<option value="">Todos</option>';
-  [...profs].sort().forEach(p=>{const o=document.createElement('option');o.value=o.textContent=p;sp.appendChild(o);});
-
-  const sc=document.getElementById('fil-car-est');
-  sc.innerHTML='<option value="">Todas</option>';
-  [...cars].sort().forEach(c=>{const o=document.createElement('option');o.value=o.textContent=c;sc.appendChild(o);});
-
-  const sn=document.getElementById('fil-car-nota');
-  sn.innerHTML='<option value="">Todas</option>';
-  [...carsN].sort().forEach(c=>{const o=document.createElement('option');o.value=o.textContent=c;sn.appendChild(o);});
-}
-
-function renderSesiones() {
-  if(!DATA.bit) return;
-  const area=document.getElementById('fil-area').value;
-  const prof=document.getElementById('fil-prof').value;
-  const asist=document.getElementById('fil-asist').value;
-
-  let data = area==='psico'?(DATA.bit.sesiones_psico||[]):
-             area==='mat'?(DATA.bit.sesiones_mat||[]):(DATA.bit.sesiones_alfa||[]);
-  if(prof)  data=data.filter(s=>s.profesional===prof);
-  if(asist) data=data.filter(s=>(s.asiste||'').toUpperCase()===asist);
-
-  document.getElementById('ses-count').textContent=data.length+' sesiones';
-  const nk=area==='psico'?'nombre':'estudiante';
-  const nec=area==='psico'?'necesidades_sentidas':'necesidades';
-  const hab=area==='psico'?'dimension':'habilidad';
-
-  const tbody=document.getElementById('ses-body');
-  if(!data.length){tbody.innerHTML='<tr><td colspan="6" class="empty">Sin registros</td></tr>';return;}
-  tbody.innerHTML=data.slice(0,200).map(s=>{
-    const ok=(s.asiste||'').toUpperCase()==='SI';
-    return`<tr>
-      <td title="${s[nk]||''}">${(s[nk]||'—').substring(0,30)}</td>
-      <td>${s.fecha||'—'}</td>
-      <td>${(s.profesional||'—').split(' ')[0]}</td>
-      <td><span class="badge ${ok?'bg':'br'}">${s.asiste||'—'}</span></td>
-      <td title="${s[hab]||''}">${(s[hab]||'—').substring(0,25)}</td>
-      <td title="${s[nec]||''}" style="color:#5f5e5a">${(s[nec]||'—').substring(0,60)}</td>
-    </tr>`;
-  }).join('');
-}
-
-function renderEstudiantes() {
-  if(!DATA.bit||!DATA.bit.estudiantes) return;
-  const busq=(document.getElementById('busq').value||'').toLowerCase();
-  const car=document.getElementById('fil-car-est').value;
-
-  let data=DATA.bit.estudiantes.filter(e=>{
-    if(busq&&!(e.nombre||'').toLowerCase().includes(busq)) return false;
-    if(car&&e.carrera!==car) return false;
-    return true;
-  });
-
-  document.getElementById('est-count').textContent=data.length+' estudiantes';
-  const scr={};
-  (DATA.bit.sesiones_psico||[]).forEach(s=>{if(s.asiste==='SI')scr[s.rut]=(scr[s.rut]||0)+1;});
-  const pr={};
-  (DATA.prom&&DATA.prom.notas||[]).forEach(n=>{pr[n.rut]=n;});
-
-  document.getElementById('est-body').innerHTML=data.slice(0,200).map(e=>{
-    const ns=scr[e.rut]||0;
-    return`<tr onclick="selectEst('${e.rut}')">
-      <td title="${e.nombre}">${(e.nombre||'').substring(0,30)}</td>
-      <td title="${e.carrera}" style="font-size:11px">${(e.carrera||'').substring(0,26)}</td>
-      <td style="font-size:11px">${(e.tipo_ingreso||'—').substring(0,10)}</td>
-      <td><span class="badge ${ns>0?'bg':'ba'}">${ns} ses.</span></td>
-    </tr>`;
-  }).join('');
-}
-
-function selectEst(rut) {
-  if(!DATA.bit||!DATA.bit.estudiantes) return;
-  const e=DATA.bit.estudiantes.find(x=>x.rut===rut);
-  if(!e) return;
-  document.getElementById('det-nombre').textContent=e.nombre||'—';
-  document.getElementById('det-carr').textContent=e.carrera||'—';
-  document.getElementById('det-tipo').textContent=e.tipo_ingreso||'—';
-  const ses=(DATA.bit.sesiones_psico||[]).filter(s=>s.rut===rut);
-  document.getElementById('det-nsespsico').textContent=ses.filter(s=>s.asiste==='SI').length;
-  const p=DATA.prom&&DATA.prom.notas?DATA.prom.notas.find(n=>String(n.rut)===String(rut)):null;
-  document.getElementById('det-nota').textContent=p?(p.promedio_simple||'—'):'—';
-  document.getElementById('det-cursos').textContent=p?p.cursos_inscritos:'—';
-  const tl=document.getElementById('det-sesiones');
-  if(!ses.length){tl.innerHTML='<div class="empty">Sin sesiones registradas</div>';return;}
-  tl.innerHTML=ses.slice(-5).reverse().map(s=>`
-    <div class="tl-item">
-      <div class="tl-dot" style="background:${s.asiste==='SI'?'#639922':'#E24B4A'}"></div>
-      <div>
-        <div class="tl-txt">${(s.actividad||s.dimension||'Sesión psicoeducativa').substring(0,50)}</div>
-        <div class="tl-sub">${s.fecha||'—'} · ${s.profesional||'—'}</div>
-      </div>
-    </div>`).join('');
-}
-
-function renderNotas() {
-  if(!DATA.prom||!DATA.prom.notas) return;
-  const busq=(document.getElementById('busq-nota').value||'').toLowerCase();
-  const car=document.getElementById('fil-car-nota').value;
-  const rango=document.getElementById('fil-rango').value;
-
-  let data=DATA.prom.notas.filter(n=>{
-    if(busq&&!(n.nombre||'').toLowerCase().includes(busq)) return false;
-    if(car&&!(n.carrera||'').replace(/ v\d{4}$/,'').includes(car)) return false;
-    if(rango==='bajo'&&n.promedio_simple>=4.0) return false;
-    if(rango==='medio'&&(n.promedio_simple<4.0||n.promedio_simple>=5.0)) return false;
-    if(rango==='alto'&&n.promedio_simple<5.0) return false;
-    return true;
-  });
-
-  document.getElementById('nota-count').textContent=data.length+' estudiantes';
-  document.getElementById('nota-body').innerHTML=data.map(n=>{
-    const p=n.promedio_simple;
-    const cls=p<4.0?'br':p<5.0?'ba':'bg';
-    const c=(n.carrera||'').replace(/ v\d{4}$/,'');
-    return`<tr>
-      <td title="${n.nombre}">${(n.nombre||'').substring(0,30)}</td>
-      <td title="${c}" style="font-size:11px">${c.substring(0,28)}</td>
-      <td style="font-size:11px">${n.genero||'—'}</td>
-      <td>${n.cursos_inscritos||'—'}</td>
-      <td><span class="badge ${cls}">${p?p.toFixed(2):'—'}</span></td>
-      <td>${n.promedio_ponderado?n.promedio_ponderado.toFixed(2):'—'}</td>
-    </tr>`;
-  }).join('');
-}
-
-function renderAlertas() {
-  if(!DATA.prom||!DATA.prom.notas) return;
-  const bajo=DATA.prom.notas.filter(n=>n.promedio_simple>0&&n.promedio_simple<4.0)
-    .sort((a,b)=>a.promedio_simple-b.promedio_simple);
-  document.getElementById('alert-body').innerHTML=bajo.map(n=>{
-    const c=(n.carrera||'').replace(/ v\d{4}$/,'');
-    return`<tr>
-      <td>${(n.nombre||'').substring(0,35)}</td>
-      <td style="font-size:11px">${c.substring(0,30)}</td>
-      <td><span class="badge br">${n.promedio_simple.toFixed(2)}</span></td>
-      <td>${n.cursos_pendientes||0}</td>
-      <td><span class="badge ${n.cursos_pendientes>0?'br':'ba'}">${n.cursos_pendientes>0?'Con pendientes':'Sin pendientes'}</span></td>
-    </tr>`;
-  }).join('');
-}
-
-function show(id,btn) {
+// ── NAVEGACIÓN ──────────────────────────────────────────────
+function show(id, btn) {
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if(btn) btn.classList.add('active');
 }
 
-loadAll();
+// ── GENERAL ─────────────────────────────────────────────────
+function buildGeneral() {
+  const carr = {}, adm = {}, gen = {}, tech = {}, trab = {};
+  LIBRO.forEach(s => {
+    const c = s.carrera||'Sin carrera';
+    carr[c] = (carr[c]||0)+1;
+    const a = s.tipo_adm||'Otro';
+    adm[a] = (adm[a]||0)+1;
+    if(s.genero) gen[s.genero] = (gen[s.genero]||0)+1;
+    if(s.tech)   tech[s.tech]  = (tech[s.tech]||0)+1;
+    if(s.trabaja) trab[s.trabaja] = (trab[s.trabaja]||0)+1;
+  });
+
+  const topCarr = Object.entries(carr).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  if(charts.carr) charts.carr.destroy();
+  charts.carr = new Chart(document.getElementById('c-carr'), {
+    type:'bar', data:{
+      labels: topCarr.map(x=>x[0].length>22?x[0].substring(0,22)+'…':x[0]),
+      datasets:[{data:topCarr.map(x=>x[1]),backgroundColor:'#378ADD',borderRadius:3}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},
+      scales:{x:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.06)'}},y:{ticks:{font:{size:9}},grid:{display:false}}}}
+  });
+
+  const admKeys = Object.keys(adm), admVals = Object.values(adm);
+  if(charts.adm) charts.adm.destroy();
+  charts.adm = new Chart(document.getElementById('c-adm'), {
+    type:'doughnut', data:{labels:admKeys,datasets:[{data:admVals,backgroundColor:['#378ADD','#7F77DD','#1D9E75','#BA7517','#E24B4A'],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:8,padding:5}}}}
+  });
+
+  if(charts.gen) charts.gen.destroy();
+  charts.gen = new Chart(document.getElementById('c-gen'), {
+    type:'doughnut', data:{labels:Object.keys(gen),datasets:[{data:Object.values(gen),backgroundColor:['#D4537E','#378ADD','#7F77DD','#9FE1CB','#B4B2A9'],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:8,padding:5}}}}
+  });
+
+  if(charts.tech) charts.tech.destroy();
+  charts.tech = new Chart(document.getElementById('c-tech'), {
+    type:'doughnut', data:{labels:Object.keys(tech),datasets:[{data:Object.values(tech),backgroundColor:['#378ADD','#BA7517','#7F77DD','#E24B4A'],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:8,padding:5}}}}
+  });
+
+  const trabSi = trab['Sí']||0, trabNo = trab['No']||0;
+  if(charts.trab) charts.trab.destroy();
+  charts.trab = new Chart(document.getElementById('c-trab'), {
+    type:'doughnut', data:{labels:['No trabaja ('+trabNo+')','Trabaja ('+trabSi+')'],datasets:[{data:[trabNo,trabSi],backgroundColor:['#D3D1C7','#BA7517'],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:8,padding:5}}}}
+  });
+}
+
+// ── DIAGNÓSTICO ─────────────────────────────────────────────
+function buildDiag() {
+  const ev = LIBRO.filter(s=>s.nl_psico);
+  const countNL = (arr, field) => {
+    const r = {Alto:0,Medio:0,Bajo:0};
+    arr.forEach(s=>{if(s[field])r[s[field]]=(r[s[field]]||0)+1;});
+    return r;
+  };
+  const psico = countNL(ev,'nl_psico');
+  const alfa  = countNL(ev,'nl_alfa');
+  const mat   = countNL(ev,'nl_mat');
+
+  if(charts.dniv) charts.dniv.destroy();
+  charts.dniv = new Chart(document.getElementById('c-dniveles'), {
+    type:'bar', data:{
+      labels:['Psicoeducativo','Alfabetización','Matemática'],
+      datasets:[
+        {label:'Alto', data:[psico.Alto,alfa.Alto,mat.Alto], backgroundColor:'#639922',borderRadius:3},
+        {label:'Medio',data:[psico.Medio,alfa.Medio,mat.Medio],backgroundColor:'#BA7517',borderRadius:3},
+        {label:'Bajo', data:[psico.Bajo,alfa.Bajo,mat.Bajo],  backgroundColor:'#E24B4A',borderRadius:3}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{stacked:true,ticks:{font:{size:10}},grid:{display:false}},y:{stacked:true,ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.06)'}}}}
+  });
+
+  const psicoPts = Array(25).fill(0), alfaPts = Array(7).fill(0), matPts = Array(10).fill(0);
+  ev.forEach(s=>{
+    if(s.pts_psico!=null) psicoPts[Math.min(s.pts_psico,24)]++;
+    if(s.pts_alfa!=null)  alfaPts[Math.min(s.pts_alfa,6)]++;
+    if(s.pts_mat!=null)   matPts[Math.min(s.pts_mat,9)]++;
+  });
+
+  if(charts.dpsico) charts.dpsico.destroy();
+  charts.dpsico = new Chart(document.getElementById('c-dpsico'), {
+    type:'bar', data:{labels:Array.from({length:25},(_,i)=>i),datasets:[{data:psicoPts,backgroundColor:'#7F77DD',borderRadius:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.06)'}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+  });
+  if(charts.dalfa) charts.dalfa.destroy();
+  charts.dalfa = new Chart(document.getElementById('c-dalfa'), {
+    type:'bar', data:{labels:['0','1','2','3','4','5','6'],datasets:[{data:alfaPts,backgroundColor:'#1D9E75',borderRadius:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.06)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}
+  });
+  if(charts.dmat) charts.dmat.destroy();
+  charts.dmat = new Chart(document.getElementById('c-dmat'), {
+    type:'bar', data:{labels:Array.from({length:10},(_,i)=>i),datasets:[{data:matPts,backgroundColor:'#378ADD',borderRadius:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.06)'}},x:{ticks:{font:{size:10}},grid:{display:false}}}}
+  });
+}
+
+// ── ESTUDIANTES ──────────────────────────────────────────────
+function initFiltros() {
+  const carrs = [...new Set(LIBRO.map(s=>s.carrera).filter(Boolean))].sort();
+  const sel = document.getElementById('fil-carr');
+  carrs.forEach(c=>{const o=document.createElement('option');o.value=o.textContent=c;sel.appendChild(o);});
+  const sel2 = document.getElementById('fil-carr2');
+  carrs.forEach(c=>{const o=document.createElement('option');o.value=o.textContent=c;sel2.appendChild(o);});
+}
+
+function filtrarEst() {
+  const busq  = (document.getElementById('busq-est').value||'').toLowerCase();
+  const año   = document.getElementById('fil-año').value;
+  const carr  = document.getElementById('fil-carr').value;
+  const alerta= document.getElementById('fil-alerta').value;
+  const diag  = document.getElementById('fil-diag').value;
+
+  filtrados = LIBRO.filter(s => {
+    if(busq && !(s.nombre||'').toLowerCase().includes(busq)) return false;
+    if(año  && s.año !== año) return false;
+    if(carr && s.carrera !== carr) return false;
+    if(alerta === 'SI' && s.alerta !== 'SI') return false;
+    if(alerta === '0'  && s.alerta === 'SI') return false;
+    if(diag && s.nl_psico !== diag && s.nl_alfa !== diag && s.nl_mat !== diag) return false;
+    return true;
+  });
+
+  document.getElementById('est-count').textContent = filtrados.length + ' estudiantes';
+  const pByRut = {};
+  if(LIVE.prom && LIVE.prom.notas) LIVE.prom.notas.forEach(n=>{ pByRut[String(n.rut)]=n; });
+
+  document.getElementById('est-body').innerHTML = filtrados.slice(0,300).map(s => {
+    const p = pByRut[String(s.rut)];
+    const nota = p ? p.promedio_simple : null;
+    const ncls = nota ? (nota<4?'br':nota<5?'ba':'bg') : '';
+    return `<tr onclick="selectEst('${s.rut}')" id="row-${s.rut}">
+      <td title="${s.nombre}">${(s.nombre||'').substring(0,28)}</td>
+      <td><span class="badge bb">${s.año||'—'}</span></td>
+      <td title="${s.carrera}" style="font-size:11px">${(s.carrera||'').substring(0,18)}</td>
+      <td>${nlBadge(s.nl_psico)}</td>
+      <td>${nlBadge(s.nl_alfa)}</td>
+      <td>${nlBadge(s.nl_mat)}</td>
+      <td>${nota?'<span class="badge '+ncls+'">'+nota.toFixed(1)+'</span>':'<span style="color:#888;font-size:11px">—</span>'}</td>
+      <td>${s.alerta==='SI'?'<span class="badge br">Alerta</span>':s.criterios>1?'<span class="badge ba">Crit.'+s.criterios+'</span>':'<span style="color:#888;font-size:11px">—</span>'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function selectEst(rut) {
+  selectedRut = rut;
+  document.querySelectorAll('.stbl tr').forEach(r=>r.classList.remove('sel'));
+  const row = document.getElementById('row-'+rut);
+  if(row) row.classList.add('sel');
+
+  const s = libroByRut[rut];
+  if(!s) return;
+
+  document.getElementById('det-n').textContent = s.nombre||'—';
+  document.getElementById('det-c').textContent = s.carrera||'—';
+  document.getElementById('det-año').textContent = s.año||'—';
+  document.getElementById('det-adm').textContent = (s.tipo_adm||'—').substring(0,14);
+  document.getElementById('det-gen').textContent = s.genero||'—';
+  document.getElementById('det-trab').textContent = s.trabaja||'—';
+  document.getElementById('det-tech').textContent = s.tech||'—';
+  document.getElementById('det-pueblo').textContent = s.pueblo||'—';
+  document.getElementById('det-crit').textContent = s.criterios||0;
+  document.getElementById('det-mail').textContent = s.mail_personal||'—';
+  document.getElementById('det-mailuah').textContent = s.mail_uah||'—';
+
+  const p = getPromByRut(rut);
+  document.getElementById('det-nota').textContent = p ? p.promedio_simple.toFixed(2) : '—';
+
+  // Diagnóstico
+  const dc = document.getElementById('det-diag-content');
+  if(s.nl_psico) {
+    dc.innerHTML = `
+      <div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;font-size:12px">${'Psicoeducativo'}${nlBadge(s.nl_psico)}</div>
+        <div class="pb"><div class="pf" style="width:${Math.round((s.pts_psico||0)/24*100)}%;background:#7F77DD"></div></div>
+        <div style="font-size:10px;color:#888;margin-top:2px">${s.pts_psico||0} / 24 pts</div>
+      </div>
+      <div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;font-size:12px">${'Alfabetización'}${nlBadge(s.nl_alfa)}</div>
+        <div class="pb"><div class="pf" style="width:${Math.round((s.pts_alfa||0)/6*100)}%;background:#1D9E75"></div></div>
+        <div style="font-size:10px;color:#888;margin-top:2px">${s.pts_alfa||0} / 6 pts</div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:12px">${'Matemática'}${nlBadge(s.nl_mat)}</div>
+        <div class="pb"><div class="pf" style="width:${Math.round((s.pts_mat||0)/9*100)}%;background:#378ADD"></div></div>
+        <div style="font-size:10px;color:#888;margin-top:2px">${s.pts_mat||0} / 9 pts</div>
+      </div>`;
+  } else {
+    dc.innerHTML = '<div class="empty">Sin diagnóstico registrado</div>';
+  }
+
+  // Alerta
+  const ac = document.getElementById('det-alerta-content');
+  if(s.alerta === 'SI') {
+    ac.innerHTML = `<div style="color:#A32D2D;font-size:12px;font-weight:500;margin-bottom:4px">Alerta activa · ${s.criterios||0} criterio(s)</div>
+      <div style="font-size:12px;color:#5f5e5a">${s.dificultades||'Sin descripción'}</div>`;
+  } else if((s.criterios||0) > 0) {
+    ac.innerHTML = `<div style="color:#854F0B;font-size:12px;font-weight:500;margin-bottom:4px">${s.criterios} criterio(s) identificado(s)</div>
+      <div style="font-size:12px;color:#5f5e5a">${s.dificultades||'Sin descripción'}</div>`;
+  } else {
+    ac.innerHTML = '<div class="empty">Sin alertas registradas</div>';
+  }
+
+  // Sesiones en vivo
+  const ses = getSesionesEst(rut);
+  const tl = document.getElementById('det-ses');
+  if(!ses.length) {
+    tl.innerHTML = '<div class="empty">Sin sesiones en bitácora</div>';
+  } else {
+    tl.innerHTML = ses.slice(-4).reverse().map(s=>`
+      <div class="tli">
+        <div class="tld" style="background:${s.asiste==='SI'?'#639922':'#E24B4A'}"></div>
+        <div>
+          <div class="tlt">${(s.actividad||s.dimension||'Sesión').substring(0,45)}</div>
+          <div class="tls">${s.fecha||'—'} · ${(s.profesional||'').split(' ')[0]}</div>
+        </div>
+      </div>`).join('');
+  }
+}
+
+// ── SESIONES ────────────────────────────────────────────────
+function initSesProf() {
+  const profs = new Set();
+  if(LIVE.bit && LIVE.bit.sesiones_psico) LIVE.bit.sesiones_psico.forEach(s=>{if(s.profesional)profs.add(s.profesional);});
+  const sel = document.getElementById('fil-prof');
+  sel.innerHTML = '<option value="">Todos</option>';
+  [...profs].sort().forEach(p=>{const o=document.createElement('option');o.value=o.textContent=p;sel.appendChild(o);});
+}
+
+function renderSes() {
+  if(!LIVE.bit) { document.getElementById('ses-body').innerHTML='<tr><td colspan="6" class="empty">Cargando datos en vivo...</td></tr>'; return; }
+  initSesProf();
+  const area  = document.getElementById('fil-area').value;
+  const prof  = document.getElementById('fil-prof').value;
+  const asist = document.getElementById('fil-asist').value;
+
+  let data = area==='psico'?(LIVE.bit.sesiones_psico||[]):
+             area==='mat'  ?(LIVE.bit.sesiones_mat||[])  :(LIVE.bit.sesiones_alfa||[]);
+  if(prof)  data = data.filter(s=>s.profesional===prof);
+  if(asist) data = data.filter(s=>(s.asiste||'').toUpperCase()===asist);
+
+  document.getElementById('ses-count').textContent = data.length + ' sesiones';
+  const nk  = area==='psico'?'nombre':'estudiante';
+  const nec = area==='psico'?'necesidades_sentidas':'necesidades';
+  const hab = area==='psico'?'dimension':'habilidad';
+
+  document.getElementById('ses-body').innerHTML = data.slice(0,300).map(s=>{
+    const ok = (s.asiste||'').toUpperCase()==='SI';
+    return `<tr>
+      <td title="${s[nk]||''}">${(s[nk]||'—').substring(0,28)}</td>
+      <td>${s.fecha||'—'}</td>
+      <td>${(s.profesional||'—').split(' ')[0]}</td>
+      <td><span class="badge ${ok?'bg':'br'}">${s.asiste||'—'}</span></td>
+      <td>${(s[hab]||'—').substring(0,22)}</td>
+      <td style="color:#5f5e5a">${(s[nec]||'—').substring(0,55)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── POR CARRERA ──────────────────────────────────────────────
+function renderCarrera() {
+  const carr = document.getElementById('fil-carr2').value;
+  if(!carr) return;
+  const ests = LIBRO.filter(s=>s.carrera===carr);
+  const conDiag = ests.filter(s=>s.nl_psico);
+  const conAlerta = ests.filter(s=>s.alerta==='SI');
+
+  const pByRut = {};
+  if(LIVE.prom&&LIVE.prom.notas) LIVE.prom.notas.forEach(n=>{pByRut[String(n.rut)]=n;});
+  const conNota = ests.map(s=>pByRut[String(s.rut)]).filter(Boolean);
+  const promedio = conNota.length ? (conNota.reduce((a,b)=>a+b.promedio_simple,0)/conNota.length).toFixed(2) : '—';
+
+  const psNL = {Alto:0,Medio:0,Bajo:0};
+  conDiag.forEach(s=>{ if(s.nl_psico) psNL[s.nl_psico]=(psNL[s.nl_psico]||0)+1; });
+  const alNL = {Alto:0,Medio:0,Bajo:0};
+  conDiag.forEach(s=>{ if(s.nl_alfa) alNL[s.nl_alfa]=(alNL[s.nl_alfa]||0)+1; });
+  const maNL = {Alto:0,Medio:0,Bajo:0};
+  conDiag.forEach(s=>{ if(s.nl_mat) maNL[s.nl_mat]=(maNL[s.nl_mat]||0)+1; });
+
+  document.getElementById('carr-content').innerHTML = `
+    <div class="mg">
+      <div class="mc"><div class="ml">Estudiantes</div><div class="mv b">${ests.length}</div><div class="ms">${carr.substring(0,30)}</div></div>
+      <div class="mc"><div class="ml">Con diagnóstico</div><div class="mv">${conDiag.length}</div><div class="ms">evaluados</div></div>
+      <div class="mc"><div class="ml">Promedio semestre</div><div class="mv g">${promedio}</div><div class="ms">semestre 20252</div></div>
+      <div class="mc"><div class="ml">Con alerta</div><div class="mv r">${conAlerta.length}</div><div class="ms">CarPACE26</div></div>
+    </div>
+    <div class="r3">
+      <div class="card"><div class="ct">Diagnóstico Psicoeducativo</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+          ${['Alto','Medio','Bajo'].map(nl=>`<div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span>${nl}</span><span style="font-weight:500">${psNL[nl]||0}</span></div>
+            <div class="pb"><div class="pf" style="width:${conDiag.length?Math.round((psNL[nl]||0)/conDiag.length*100):0}%;background:${nl==='Alto'?'#639922':nl==='Medio'?'#BA7517':'#E24B4A'}"></div></div>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div class="card"><div class="ct">Diagnóstico Alfabetización</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+          ${['Alto','Medio','Bajo'].map(nl=>`<div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span>${nl}</span><span style="font-weight:500">${alNL[nl]||0}</span></div>
+            <div class="pb"><div class="pf" style="width:${conDiag.length?Math.round((alNL[nl]||0)/conDiag.length*100):0}%;background:${nl==='Alto'?'#639922':nl==='Medio'?'#BA7517':'#E24B4A'}"></div></div>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div class="card"><div class="ct">Diagnóstico Matemática</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+          ${['Alto','Medio','Bajo'].map(nl=>`<div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span>${nl}</span><span style="font-weight:500">${maNL[nl]||0}</span></div>
+            <div class="pb"><div class="pf" style="width:${conDiag.length?Math.round((maNL[nl]||0)/conDiag.length*100):0}%;background:${nl==='Alto'?'#639922':nl==='Medio'?'#BA7517':'#E24B4A'}"></div></div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="card"><div class="ct">Estudiantes — ${carr}</div>
+      <div class="tscroll">
+        <table class="stbl">
+          <thead><tr><th>Nombre</th><th>Año</th><th>Psico</th><th>Alfa</th><th>Mat</th><th>Nota</th><th>Alerta</th><th>Mail</th></tr></thead>
+          <tbody>${ests.map(s=>{
+            const p = pByRut[String(s.rut)];
+            const nota = p?p.promedio_simple:null;
+            const ncls = nota?(nota<4?'br':nota<5?'ba':'bg'):'';
+            return `<tr onclick="selectEstDetalle('${s.rut}')">
+              <td title="${s.nombre}">${(s.nombre||'').substring(0,28)}</td>
+              <td><span class="badge bb">${s.año}</span></td>
+              <td>${nlBadge(s.nl_psico)}</td>
+              <td>${nlBadge(s.nl_alfa)}</td>
+              <td>${nlBadge(s.nl_mat)}</td>
+              <td>${nota?'<span class="badge '+ncls+'">'+nota.toFixed(1)+'</span>':'—'}</td>
+              <td>${s.alerta==='SI'?'<span class="badge br">Alerta</span>':critBadge(s.criterios)}</td>
+              <td style="font-size:10px;color:#185FA5">${(s.mail_personal||'').substring(0,22)}</td>
+            </tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function selectEstDetalle(rut) {
+  show('estudiantes', document.querySelectorAll('.nb')[2]);
+  document.getElementById('busq-est').value = '';
+  document.getElementById('fil-carr').value = '';
+  document.getElementById('fil-año').value = '';
+  document.getElementById('fil-alerta').value = '';
+  document.getElementById('fil-diag').value = '';
+  filtrarEst();
+  setTimeout(()=>selectEst(rut), 100);
+}
+
+// ── ALERTAS ──────────────────────────────────────────────────
+function buildAlertas() {
+  const crit2 = LIBRO.filter(s=>(s.criterios||0)>=2).length;
+  document.getElementById('a-crit2').textContent = crit2;
+
+  const pByRut = {};
+  if(LIVE.prom&&LIVE.prom.notas) LIVE.prom.notas.forEach(n=>{pByRut[String(n.rut)]=n;});
+
+  const bajo4 = LIVE.prom&&LIVE.prom.notas ? LIVE.prom.notas.filter(n=>n.promedio_simple>0&&n.promedio_simple<4).length : '—';
+  document.getElementById('a-bajo4').textContent = bajo4;
+
+  const combo = LIBRO.filter(s=>{
+    const p = pByRut[String(s.rut)];
+    return p && p.promedio_simple < 4 && (s.alerta==='SI' || (s.criterios||0)>=2);
+  });
+  document.getElementById('a-combo').textContent = combo.length;
+
+  // Tabla 1: alertas activas
+  const alertas = LIBRO.filter(s=>s.alerta==='SI').sort((a,b)=>(b.criterios||0)-(a.criterios||0));
+  document.getElementById('a-body1').innerHTML = alertas.map(s=>`<tr onclick="selectEstDetalle('${s.rut}')">
+    <td title="${s.nombre}">${(s.nombre||'').substring(0,28)}</td>
+    <td style="font-size:11px">${(s.carrera||'').substring(0,22)}</td>
+    <td>${critBadge(s.criterios)}</td>
+    <td style="font-size:11px;color:#5f5e5a">${(s.dificultades||'—').substring(0,30)}</td>
+  </tr>`).join('');
+
+  // Tabla 2: bajo 4.0
+  if(LIVE.prom&&LIVE.prom.notas) {
+    const bajo = LIVE.prom.notas.filter(n=>n.promedio_simple>0&&n.promedio_simple<4).sort((a,b)=>a.promedio_simple-b.promedio_simple);
+    document.getElementById('a-body2').innerHTML = bajo.map(n=>`<tr>
+      <td title="${n.nombre}">${(n.nombre||'').substring(0,28)}</td>
+      <td style="font-size:11px">${(n.carrera||'').replace(/ v\d{4}$/,'').substring(0,22)}</td>
+      <td><span class="badge br">${n.promedio_simple.toFixed(2)}</span></td>
+      <td>${n.cursos_pendientes||0}</td>
+    </tr>`).join('');
+  }
+
+  // Tabla 3: riesgo combinado
+  document.getElementById('a-body3').innerHTML = combo.map(s=>{
+    const p = pByRut[String(s.rut)];
+    return `<tr onclick="selectEstDetalle('${s.rut}')">
+      <td title="${s.nombre}">${(s.nombre||'').substring(0,26)}</td>
+      <td style="font-size:11px">${(s.carrera||'').substring(0,20)}</td>
+      <td><span class="badge br">${p?p.promedio_simple.toFixed(2):'—'}</span></td>
+      <td>${s.alerta==='SI'?'<span class="badge br">Activa</span>':'<span class="badge ba">Criterios</span>'}</td>
+      <td>${critBadge(s.criterios)}</td>
+      <td style="font-size:11px;color:#5f5e5a">${(s.dificultades||'—').substring(0,28)}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="6" class="empty">Sin casos de riesgo combinado</td></tr>';
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+buildGeneral();
+buildDiag();
+initFiltros();
+filtrarEst();
+buildAlertas();
+loadRemote();
 </script>
 </body>
 </html>
