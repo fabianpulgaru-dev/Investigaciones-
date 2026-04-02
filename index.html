@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visor Acompañamiento UTE</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;padding:1rem}
+.wrap{max-width:1100px;margin:0 auto}
+.status-bar{display:flex;align-items:center;gap:8px;margin-bottom:1rem;padding:8px 12px;background:#f1efe8;border-radius:8px;font-size:12px;color:#5f5e5a;flex-wrap:wrap}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#888;flex-shrink:0}
+.status-dot.ok{background:#639922}.status-dot.loading{background:#BA7517;animation:pulse 1s infinite}.status-dot.err{background:#E24B4A}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.nav{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1.25rem;border-bottom:1px solid #e5e5e0;padding-bottom:10px}
+.nb{padding:6px 13px;font-size:12px;border:1px solid #ccc;border-radius:8px;background:transparent;color:#5f5e5a;cursor:pointer;transition:all .15s}
+.nb:hover{background:#e5e5e0}
+.nb.active{background:#e6f1fb;color:#0c447c;border-color:#85b7eb}
+.sec{display:none}.sec.active{display:block}
+.mg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:1.25rem}
+.mc{background:#f1efe8;border-radius:8px;padding:12px}
+.ml{font-size:11px;color:#5f5e5a;margin-bottom:4px}
+.mv{font-size:22px;font-weight:500;color:#1a1a1a}
+.ms{font-size:11px;color:#5f5e5a;margin-top:2px}
+.mv.g{color:#3B6D11}.mv.a{color:#854F0B}.mv.r{color:#A32D2D}.mv.b{color:#185FA5}
+.row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:10px}
+.card{background:#fff;border:1px solid #e5e5e0;border-radius:12px;padding:14px}
+.ct{font-size:11px;font-weight:500;color:#5f5e5a;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
+.cw{position:relative;width:100%}
+.badge{font-size:10px;padding:2px 7px;border-radius:8px;display:inline-block}
+.bg{background:#EAF3DE;color:#3B6D11}.ba{background:#FAEEDA;color:#854F0B}.br{background:#FCEBEB;color:#A32D2D}.bb{background:#E6F1FB;color:#185FA5}
+.pb{height:5px;background:#e5e5e0;border-radius:3px;overflow:hidden;margin-top:3px}
+.pf{height:100%;border-radius:3px}
+.fbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.fbar select,.fbar input{font-size:12px;padding:5px 8px;border:1px solid #ccc;border-radius:8px;background:#fff;color:#1a1a1a}
+.fbar input{min-width:180px}
+.fbar label{font-size:12px;color:#5f5e5a}
+.stbl{width:100%;font-size:12px;border-collapse:collapse}
+.stbl th{font-weight:500;color:#5f5e5a;padding:7px 8px;text-align:left;border-bottom:1px solid #e5e5e0;font-size:11px;white-space:nowrap}
+.stbl td{padding:7px 8px;border-bottom:1px solid #e5e5e0;color:#1a1a1a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+.stbl tr:hover td{background:#f5f5f3;cursor:pointer}
+.det{background:#f1efe8;border-radius:12px;padding:14px;margin-bottom:10px}
+.dn{font-size:14px;font-weight:500;color:#1a1a1a}
+.dp{font-size:12px;color:#5f5e5a;margin-top:2px}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.sm{background:#fff;border-radius:8px;padding:8px;display:flex;justify-content:space-between;align-items:center}
+.sl{font-size:11px;color:#5f5e5a}.sv{font-size:12px;font-weight:500;color:#1a1a1a}
+.tl{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.tl-item{display:flex;gap:8px;align-items:flex-start}
+.tl-dot{width:7px;height:7px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.tl-txt{font-size:12px;color:#1a1a1a}
+.tl-sub{font-size:11px;color:#5f5e5a}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;font-size:11px;color:#5f5e5a}
+.legend span{display:flex;align-items:center;gap:4px}
+.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.empty{font-size:13px;color:#5f5e5a;padding:20px;text-align:center}
+.refresh-btn{font-size:11px;padding:4px 10px;border:1px solid #ccc;border-radius:8px;background:#fff;color:#5f5e5a;cursor:pointer;margin-left:auto}
+.refresh-btn:hover{background:#e5e5e0}
+h1{font-size:18px;font-weight:500;margin-bottom:4px;color:#1a1a1a}
+.subtitle{font-size:13px;color:#5f5e5a;margin-bottom:1rem}
+@media(max-width:600px){.mg{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Visor de acompañamiento</h1>
+<p class="subtitle">Equipo UTE · Datos en tiempo real desde Google Sheets</p>
+
+<div class="status-bar">
+  <div class="status-dot loading" id="dot-bit"></div>
+  <span id="status-bit">Conectando bitácora...</span>
+  <div class="status-dot loading" id="dot-prom" style="margin-left:12px"></div>
+  <span id="status-prom">Cargando promedios...</span>
+  <div class="status-dot loading" id="dot-lib" style="margin-left:12px"></div>
+  <span id="status-lib">Cargando libro de clases...</span>
+  <button class="refresh-btn" onclick="loadAll()">Actualizar datos</button>
+</div>
+
+<div class="nav">
+  <button class="nb active" onclick="show('general',this)">Vista general</button>
+  <button class="nb" onclick="show('sesiones',this)">Sesiones</button>
+  <button class="nb" onclick="show('estudiantes',this)">Estudiantes</button>
+  <button class="nb" onclick="show('notas',this)">Notas</button>
+  <button class="nb" onclick="show('alertas',this)">Alertas</button>
+</div>
+
+<div id="general" class="sec active">
+  <div class="mg">
+    <div class="mc"><div class="ml">Estudiantes en bitácora</div><div class="mv b" id="tot-est">—</div><div class="ms">registros activos</div></div>
+    <div class="mc"><div class="ml">Sesiones psicoeducativas</div><div class="mv" id="tot-psico">—</div><div class="ms">atenciones registradas</div></div>
+    <div class="mc"><div class="ml">Promedio semestre 20252</div><div class="mv g" id="tot-prom">—</div><div class="ms">estudiantes PACE+Elijo</div></div>
+    <div class="mc"><div class="ml">Bajo rendimiento (&lt;4.0)</div><div class="mv r" id="tot-bajo">—</div><div class="ms">requieren atención</div></div>
+  </div>
+  <div class="row2">
+    <div class="card">
+      <div class="ct">Sesiones por área</div>
+      <div class="legend">
+        <span><span class="ld" style="background:#7F77DD"></span>Psicoeducativo</span>
+        <span><span class="ld" style="background:#378ADD"></span>Matemática</span>
+        <span><span class="ld" style="background:#1D9E75"></span>Alfabetización</span>
+      </div>
+      <div class="cw" style="height:180px"><canvas id="c-areas"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">Distribución notas semestre 20252</div>
+      <div class="cw" style="height:180px"><canvas id="c-notas-dist"></canvas></div>
+    </div>
+  </div>
+  <div class="row2">
+    <div class="card">
+      <div class="ct">Carreras con más estudiantes</div>
+      <div class="cw" style="height:180px"><canvas id="c-carreras"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">Asistencia sesiones psicoeducativas</div>
+      <div class="cw" style="height:180px"><canvas id="c-asist"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div id="sesiones" class="sec">
+  <div class="fbar">
+    <label>Área:</label>
+    <select id="fil-area" onchange="renderSesiones()">
+      <option value="psico">Psicoeducativo</option>
+      <option value="mat">Matemática</option>
+      <option value="alfa">Alfabetización</option>
+    </select>
+    <label>Profesional:</label>
+    <select id="fil-prof" onchange="renderSesiones()"><option value="">Todos</option></select>
+    <label>Asistencia:</label>
+    <select id="fil-asist" onchange="renderSesiones()">
+      <option value="">Todas</option>
+      <option value="SI">Asistió</option>
+      <option value="NO">No asistió</option>
+    </select>
+  </div>
+  <div style="font-size:11px;color:#5f5e5a;margin-bottom:6px" id="ses-count"></div>
+  <div style="overflow-x:auto;border:1px solid #e5e5e0;border-radius:12px">
+    <table class="stbl">
+      <thead><tr>
+        <th>Estudiante</th><th>Fecha</th><th>Profesional</th>
+        <th>Asiste</th><th>Habilidad / Área</th><th>Necesidades registradas</th>
+      </tr></thead>
+      <tbody id="ses-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="estudiantes" class="sec">
+  <div class="fbar">
+    <input type="text" id="busq" placeholder="Buscar por nombre..." oninput="renderEstudiantes()">
+    <label>Carrera:</label>
+    <select id="fil-car-est" onchange="renderEstudiantes()"><option value="">Todas</option></select>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:10px">
+    <div>
+      <div style="font-size:11px;color:#5f5e5a;margin-bottom:6px" id="est-count"></div>
+      <div style="overflow-x:auto;border:1px solid #e5e5e0;border-radius:12px">
+        <table class="stbl">
+          <thead><tr><th>Nombre</th><th>Carrera</th><th>Ingreso</th><th>Sesiones</th></tr></thead>
+          <tbody id="est-body"></tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="det">
+        <div class="dn" id="det-nombre">Selecciona un estudiante</div>
+        <div class="dp" id="det-carr">—</div>
+        <div class="sg">
+          <div class="sm"><span class="sl">Tipo ingreso</span><span class="sv" id="det-tipo">—</span></div>
+          <div class="sm"><span class="sl">Sesiones psico</span><span class="sv" id="det-nsespsico">—</span></div>
+          <div class="sm"><span class="sl">Nota semestre</span><span class="sv" id="det-nota">—</span></div>
+          <div class="sm"><span class="sl">Cursos inscritos</span><span class="sv" id="det-cursos">—</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ct">Últimas sesiones</div>
+        <div class="tl" id="det-sesiones"><div class="empty">Sin sesiones registradas</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="notas" class="sec">
+  <div class="mg" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+    <div class="mc"><div class="ml">Promedio grupal</div><div class="mv g" id="n-prom">—</div><div class="ms">semestre 20252</div></div>
+    <div class="mc"><div class="ml">Bajo 4.0</div><div class="mv r" id="n-bajo">—</div><div class="ms">en riesgo</div></div>
+    <div class="mc"><div class="ml">Sobre 5.5</div><div class="mv g" id="n-alto">—</div><div class="ms">buen desempeño</div></div>
+  </div>
+  <div class="fbar">
+    <input type="text" id="busq-nota" placeholder="Buscar estudiante..." oninput="renderNotas()">
+    <label>Carrera:</label>
+    <select id="fil-car-nota" onchange="renderNotas()"><option value="">Todas</option></select>
+    <label>Rango:</label>
+    <select id="fil-rango" onchange="renderNotas()">
+      <option value="">Todos</option>
+      <option value="bajo">Bajo 4.0</option>
+      <option value="medio">4.0 – 5.0</option>
+      <option value="alto">Sobre 5.0</option>
+    </select>
+  </div>
+  <div style="font-size:11px;color:#5f5e5a;margin-bottom:6px" id="nota-count"></div>
+  <div style="overflow-x:auto;border:1px solid #e5e5e0;border-radius:12px">
+    <table class="stbl">
+      <thead><tr>
+        <th>Nombre</th><th>Carrera</th><th>Género</th>
+        <th>Cursos</th><th>Prom. simple</th><th>Prom. ponderado</th>
+      </tr></thead>
+      <tbody id="nota-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="alertas" class="sec">
+  <div class="mg">
+    <div class="mc"><div class="ml">Promedio bajo 4.0</div><div class="mv r" id="a-bajo4">—</div><div class="ms">riesgo académico</div></div>
+    <div class="mc"><div class="ml">Sin sesiones</div><div class="mv a" id="a-sinsesion">—</div><div class="ms">sin atención registrada</div></div>
+    <div class="mc"><div class="ml">Inasistencias psico</div><div class="mv a" id="a-inasist">—</div><div class="ms">citados, no asistieron</div></div>
+    <div class="mc"><div class="ml">Con cursos pendientes</div><div class="mv r" id="a-pend">—</div><div class="ms">ramos por aprobar</div></div>
+  </div>
+  <div class="card">
+    <div class="ct">Estudiantes con promedio bajo 4.0 — semestre 20252</div>
+    <div style="overflow-x:auto">
+      <table class="stbl">
+        <thead><tr><th>Nombre</th><th>Carrera</th><th>Prom. simple</th><th>Cursos pend.</th><th>Estado</th></tr></thead>
+        <tbody id="alert-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+// ── URLS CON PROXY CORS ─────────────────────────────────────
+const PROXY = "https://corsproxy.io/?";
+const URLS = {
+  bitacora:  PROXY + encodeURIComponent("https://script.google.com/macros/s/AKfycbxudtH0wQchqWNPdHb60R0elBb27d8qFWqcXwRzu3-BnwtO_09P-7gghaHuHycUD1uA/exec"),
+  promedios: PROXY + encodeURIComponent("https://script.google.com/macros/s/AKfycbxVNdhA4vEn426YIOxg3kZ3nG9yRDKo4Fq2tyb_2K2ub1x-Ys1SFGd5bNDNrzjbpp9h/exec"),
+  libro:     PROXY + encodeURIComponent("https://script.google.com/macros/s/AKfycbyAfBOtbyeht7icgRgDXiV7BxZX4poFj_e9sN8TL9QTSAW6pjlJJ05JS8aZE8RTR99I/exec")
+};
+
+let DATA = { bit: null, prom: null, libro: null };
+let charts = {};
+
+function setStatus(id, ok, msg) {
+  document.getElementById('dot-' + id).className = 'status-dot ' + (ok ? 'ok' : 'err');
+  document.getElementById('status-' + id).textContent = msg;
+}
+
+async function fetchJSON(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return res.json();
+}
+
+async function loadAll() {
+  ['bit','prom','lib'].forEach(id => {
+    document.getElementById('dot-' + id).className = 'status-dot loading';
+  });
+  document.getElementById('status-bit').textContent  = 'Conectando bitácora...';
+  document.getElementById('status-prom').textContent = 'Cargando promedios...';
+  document.getElementById('status-lib').textContent  = 'Cargando libro de clases...';
+
+  const results = await Promise.allSettled([
+    fetchJSON(URLS.bitacora),
+    fetchJSON(URLS.promedios),
+    fetchJSON(URLS.libro)
+  ]);
+
+  if (results[0].status === 'fulfilled') {
+    DATA.bit = results[0].value;
+    const nE = DATA.bit.estudiantes ? DATA.bit.estudiantes.length : 0;
+    const nP = DATA.bit.sesiones_psico ? DATA.bit.sesiones_psico.length : 0;
+    setStatus('bit', true, 'Bitácora: ' + nE + ' estudiantes · ' + nP + ' sesiones psico');
+  } else { setStatus('bit', false, 'Error bitácora: ' + results[0].reason.message); }
+
+  if (results[1].status === 'fulfilled') {
+    DATA.prom = results[1].value;
+    setStatus('prom', true, 'Promedios: ' + (DATA.prom.notas ? DATA.prom.notas.length : 0) + ' estudiantes');
+  } else { setStatus('prom', false, 'Error promedios: ' + results[1].reason.message); }
+
+  if (results[2].status === 'fulfilled') {
+    DATA.libro = results[2].value;
+    setStatus('lib', true, 'Libro: ' + (DATA.libro.caracterizacion ? DATA.libro.caracterizacion.length : 0) + ' registros');
+  } else { setStatus('lib', false, 'Error libro: ' + results[2].reason.message); }
+
+  buildAll();
+}
+
+function buildAll() {
+  updateMetrics();
+  buildCharts();
+  populateFilters();
+  renderSesiones();
+  renderEstudiantes();
+  renderNotas();
+  renderAlertas();
+}
+
+function updateMetrics() {
+  const est   = DATA.bit && DATA.bit.estudiantes ? DATA.bit.estudiantes.length : 0;
+  const psico = DATA.bit && DATA.bit.sesiones_psico ? DATA.bit.sesiones_psico.filter(s => s.asiste === 'SI').length : 0;
+  const notas = DATA.prom && DATA.prom.notas ? DATA.prom.notas : [];
+  const val   = notas.filter(n => n.promedio_simple > 0);
+  const prom  = val.length ? (val.reduce((a,b) => a + b.promedio_simple, 0) / val.length).toFixed(2) : '—';
+  const bajo  = notas.filter(n => n.promedio_simple > 0 && n.promedio_simple < 4.0).length;
+
+  document.getElementById('tot-est').textContent   = est;
+  document.getElementById('tot-psico').textContent = psico;
+  document.getElementById('tot-prom').textContent  = prom;
+  document.getElementById('tot-bajo').textContent  = bajo;
+  document.getElementById('n-prom').textContent    = prom;
+  document.getElementById('n-bajo').textContent    = bajo;
+  document.getElementById('n-alto').textContent    = notas.filter(n => n.promedio_simple >= 5.5).length;
+  document.getElementById('a-bajo4').textContent   = bajo;
+  document.getElementById('a-inasist').textContent = DATA.bit && DATA.bit.sesiones_psico ? DATA.bit.sesiones_psico.filter(s => s.asiste === 'NO').length : '—';
+  document.getElementById('a-pend').textContent    = notas.filter(n => n.cursos_pendientes > 0).length;
+  const rutConSesion = new Set((DATA.bit && DATA.bit.sesiones_psico || []).filter(s=>s.asiste==='SI').map(s=>s.rut));
+  document.getElementById('a-sinsesion').textContent = est > 0 ? est - rutConSesion.size : '—';
+}
+
+function buildCharts() {
+  const psico = DATA.bit && DATA.bit.sesiones_psico ? DATA.bit.sesiones_psico.length : 0;
+  const mat   = DATA.bit && DATA.bit.sesiones_mat   ? DATA.bit.sesiones_mat.length   : 0;
+  const alfa  = DATA.bit && DATA.bit.sesiones_alfa  ? DATA.bit.sesiones_alfa.length  : 0;
+
+  if (charts.areas) charts.areas.destroy();
+  charts.areas = new Chart(document.getElementById('c-areas'), {
+    type: 'bar',
+    data: { labels: ['Psicoeducativo','Matemática','Alfabetización'],
+      datasets: [{ data: [psico,mat,alfa], backgroundColor: ['#7F77DD','#378ADD','#1D9E75'], borderRadius:4 }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales: { y:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.06)'}}, x:{ticks:{font:{size:10}},grid:{display:false}} } }
+  });
+
+  const notas = DATA.prom && DATA.prom.notas ? DATA.prom.notas : [];
+  const b4 = notas.filter(n => n.promedio_simple > 0 && n.promedio_simple < 4.0).length;
+  const m  = notas.filter(n => n.promedio_simple >= 4.0 && n.promedio_simple < 5.0).length;
+  const al = notas.filter(n => n.promedio_simple >= 5.0).length;
+
+  if (charts.ndist) charts.ndist.destroy();
+  charts.ndist = new Chart(document.getElementById('c-notas-dist'), {
+    type: 'doughnut',
+    data: { labels: ['Bajo 4.0 ('+b4+')','4.0–5.0 ('+m+')','Sobre 5.0 ('+al+')'],
+      datasets: [{ data:[b4,m,al], backgroundColor:['#E24B4A','#BA7517','#639922'], borderWidth:0 }] },
+    options: { responsive:true, maintainAspectRatio:false, cutout:'60%',
+      plugins: { legend: { position:'bottom', labels:{font:{size:10},boxWidth:8,padding:6} } } }
+  });
+
+  const carr = {};
+  (DATA.bit && DATA.bit.estudiantes || []).forEach(e => { if(e.carrera) carr[e.carrera]=(carr[e.carrera]||0)+1; });
+  const top = Object.entries(carr).sort((a,b)=>b[1]-a[1]).slice(0,8);
+
+  if (charts.carr) charts.carr.destroy();
+  charts.carr = new Chart(document.getElementById('c-carreras'), {
+    type: 'bar',
+    data: { labels: top.map(x=>x[0].length>24?x[0].substring(0,24)+'…':x[0]),
+      datasets: [{ data:top.map(x=>x[1]), backgroundColor:'#378ADD', borderRadius:3 }] },
+    options: { responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}},
+      scales: { x:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.06)'}}, y:{ticks:{font:{size:9}},grid:{display:false}} } }
+  });
+
+  const ses = DATA.bit && DATA.bit.sesiones_psico ? DATA.bit.sesiones_psico : [];
+  const si  = ses.filter(s=>s.asiste==='SI').length;
+  const no  = ses.filter(s=>s.asiste==='NO').length;
+
+  if (charts.asist) charts.asist.destroy();
+  charts.asist = new Chart(document.getElementById('c-asist'), {
+    type: 'doughnut',
+    data: { labels:['Asistió ('+si+')','No asistió ('+no+')'],
+      datasets: [{ data:[si,no], backgroundColor:['#639922','#E24B4A'], borderWidth:0 }] },
+    options: { responsive:true, maintainAspectRatio:false, cutout:'60%',
+      plugins: { legend: { position:'bottom', labels:{font:{size:10},boxWidth:8,padding:6} } } }
+  });
+}
+
+function populateFilters() {
+  const profs=new Set(), cars=new Set(), carsN=new Set();
+  (DATA.bit && DATA.bit.sesiones_psico||[]).forEach(s=>{if(s.profesional)profs.add(s.profesional);});
+  (DATA.bit && DATA.bit.estudiantes||[]).forEach(e=>{if(e.carrera)cars.add(e.carrera);});
+  (DATA.prom && DATA.prom.notas||[]).forEach(n=>{if(n.carrera)carsN.add(n.carrera.replace(/ v\d{4}$/,''));});
+
+  const sp=document.getElementById('fil-prof');
+  sp.innerHTML='<option value="">Todos</option>';
+  [...profs].sort().forEach(p=>{const o=document.createElement('option');o.value=o.textContent=p;sp.appendChild(o);});
+
+  const sc=document.getElementById('fil-car-est');
+  sc.innerHTML='<option value="">Todas</option>';
+  [...cars].sort().forEach(c=>{const o=document.createElement('option');o.value=o.textContent=c;sc.appendChild(o);});
+
+  const sn=document.getElementById('fil-car-nota');
+  sn.innerHTML='<option value="">Todas</option>';
+  [...carsN].sort().forEach(c=>{const o=document.createElement('option');o.value=o.textContent=c;sn.appendChild(o);});
+}
+
+function renderSesiones() {
+  if(!DATA.bit) return;
+  const area=document.getElementById('fil-area').value;
+  const prof=document.getElementById('fil-prof').value;
+  const asist=document.getElementById('fil-asist').value;
+
+  let data = area==='psico'?(DATA.bit.sesiones_psico||[]):
+             area==='mat'?(DATA.bit.sesiones_mat||[]):(DATA.bit.sesiones_alfa||[]);
+  if(prof)  data=data.filter(s=>s.profesional===prof);
+  if(asist) data=data.filter(s=>(s.asiste||'').toUpperCase()===asist);
+
+  document.getElementById('ses-count').textContent=data.length+' sesiones';
+  const nk=area==='psico'?'nombre':'estudiante';
+  const nec=area==='psico'?'necesidades_sentidas':'necesidades';
+  const hab=area==='psico'?'dimension':'habilidad';
+
+  const tbody=document.getElementById('ses-body');
+  if(!data.length){tbody.innerHTML='<tr><td colspan="6" class="empty">Sin registros</td></tr>';return;}
+  tbody.innerHTML=data.slice(0,200).map(s=>{
+    const ok=(s.asiste||'').toUpperCase()==='SI';
+    return`<tr>
+      <td title="${s[nk]||''}">${(s[nk]||'—').substring(0,30)}</td>
+      <td>${s.fecha||'—'}</td>
+      <td>${(s.profesional||'—').split(' ')[0]}</td>
+      <td><span class="badge ${ok?'bg':'br'}">${s.asiste||'—'}</span></td>
+      <td title="${s[hab]||''}">${(s[hab]||'—').substring(0,25)}</td>
+      <td title="${s[nec]||''}" style="color:#5f5e5a">${(s[nec]||'—').substring(0,60)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderEstudiantes() {
+  if(!DATA.bit||!DATA.bit.estudiantes) return;
+  const busq=(document.getElementById('busq').value||'').toLowerCase();
+  const car=document.getElementById('fil-car-est').value;
+
+  let data=DATA.bit.estudiantes.filter(e=>{
+    if(busq&&!(e.nombre||'').toLowerCase().includes(busq)) return false;
+    if(car&&e.carrera!==car) return false;
+    return true;
+  });
+
+  document.getElementById('est-count').textContent=data.length+' estudiantes';
+  const scr={};
+  (DATA.bit.sesiones_psico||[]).forEach(s=>{if(s.asiste==='SI')scr[s.rut]=(scr[s.rut]||0)+1;});
+  const pr={};
+  (DATA.prom&&DATA.prom.notas||[]).forEach(n=>{pr[n.rut]=n;});
+
+  document.getElementById('est-body').innerHTML=data.slice(0,200).map(e=>{
+    const ns=scr[e.rut]||0;
+    return`<tr onclick="selectEst('${e.rut}')">
+      <td title="${e.nombre}">${(e.nombre||'').substring(0,30)}</td>
+      <td title="${e.carrera}" style="font-size:11px">${(e.carrera||'').substring(0,26)}</td>
+      <td style="font-size:11px">${(e.tipo_ingreso||'—').substring(0,10)}</td>
+      <td><span class="badge ${ns>0?'bg':'ba'}">${ns} ses.</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function selectEst(rut) {
+  if(!DATA.bit||!DATA.bit.estudiantes) return;
+  const e=DATA.bit.estudiantes.find(x=>x.rut===rut);
+  if(!e) return;
+  document.getElementById('det-nombre').textContent=e.nombre||'—';
+  document.getElementById('det-carr').textContent=e.carrera||'—';
+  document.getElementById('det-tipo').textContent=e.tipo_ingreso||'—';
+  const ses=(DATA.bit.sesiones_psico||[]).filter(s=>s.rut===rut);
+  document.getElementById('det-nsespsico').textContent=ses.filter(s=>s.asiste==='SI').length;
+  const p=DATA.prom&&DATA.prom.notas?DATA.prom.notas.find(n=>String(n.rut)===String(rut)):null;
+  document.getElementById('det-nota').textContent=p?(p.promedio_simple||'—'):'—';
+  document.getElementById('det-cursos').textContent=p?p.cursos_inscritos:'—';
+  const tl=document.getElementById('det-sesiones');
+  if(!ses.length){tl.innerHTML='<div class="empty">Sin sesiones registradas</div>';return;}
+  tl.innerHTML=ses.slice(-5).reverse().map(s=>`
+    <div class="tl-item">
+      <div class="tl-dot" style="background:${s.asiste==='SI'?'#639922':'#E24B4A'}"></div>
+      <div>
+        <div class="tl-txt">${(s.actividad||s.dimension||'Sesión psicoeducativa').substring(0,50)}</div>
+        <div class="tl-sub">${s.fecha||'—'} · ${s.profesional||'—'}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderNotas() {
+  if(!DATA.prom||!DATA.prom.notas) return;
+  const busq=(document.getElementById('busq-nota').value||'').toLowerCase();
+  const car=document.getElementById('fil-car-nota').value;
+  const rango=document.getElementById('fil-rango').value;
+
+  let data=DATA.prom.notas.filter(n=>{
+    if(busq&&!(n.nombre||'').toLowerCase().includes(busq)) return false;
+    if(car&&!(n.carrera||'').replace(/ v\d{4}$/,'').includes(car)) return false;
+    if(rango==='bajo'&&n.promedio_simple>=4.0) return false;
+    if(rango==='medio'&&(n.promedio_simple<4.0||n.promedio_simple>=5.0)) return false;
+    if(rango==='alto'&&n.promedio_simple<5.0) return false;
+    return true;
+  });
+
+  document.getElementById('nota-count').textContent=data.length+' estudiantes';
+  document.getElementById('nota-body').innerHTML=data.map(n=>{
+    const p=n.promedio_simple;
+    const cls=p<4.0?'br':p<5.0?'ba':'bg';
+    const c=(n.carrera||'').replace(/ v\d{4}$/,'');
+    return`<tr>
+      <td title="${n.nombre}">${(n.nombre||'').substring(0,30)}</td>
+      <td title="${c}" style="font-size:11px">${c.substring(0,28)}</td>
+      <td style="font-size:11px">${n.genero||'—'}</td>
+      <td>${n.cursos_inscritos||'—'}</td>
+      <td><span class="badge ${cls}">${p?p.toFixed(2):'—'}</span></td>
+      <td>${n.promedio_ponderado?n.promedio_ponderado.toFixed(2):'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAlertas() {
+  if(!DATA.prom||!DATA.prom.notas) return;
+  const bajo=DATA.prom.notas.filter(n=>n.promedio_simple>0&&n.promedio_simple<4.0)
+    .sort((a,b)=>a.promedio_simple-b.promedio_simple);
+  document.getElementById('alert-body').innerHTML=bajo.map(n=>{
+    const c=(n.carrera||'').replace(/ v\d{4}$/,'');
+    return`<tr>
+      <td>${(n.nombre||'').substring(0,35)}</td>
+      <td style="font-size:11px">${c.substring(0,30)}</td>
+      <td><span class="badge br">${n.promedio_simple.toFixed(2)}</span></td>
+      <td>${n.cursos_pendientes||0}</td>
+      <td><span class="badge ${n.cursos_pendientes>0?'br':'ba'}">${n.cursos_pendientes>0?'Con pendientes':'Sin pendientes'}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function show(id,btn) {
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+loadAll();
+</script>
+</body>
+</html>
