@@ -36,9 +36,9 @@ main{overflow:auto}.sec{display:none;padding:26px 32px;max-width:1240px}.sec.act
 </style>
 </head>
 <body>
-<div id="login"><div class="loginbox"><div style="font-size:34px;color:var(--acc3)">✦</div><h1>Atelier Personal</h1><p>Proyectos personales, estudios, lecturas, escritura, ideas y vida en un solo lugar.</p><button class="gbtn" onclick="login()">Ingresar con Google</button><p class="small">Modo maqueta: listo para conectar Firebase Auth + Realtime Database.</p></div></div>
+<div id="login"><div class="loginbox"><div style="font-size:34px;color:var(--acc3)">✦</div><h1>Atelier Personal</h1><p>Proyectos personales, estudios, lecturas, escritura, ideas y vida en un solo lugar.</p><button class="gbtn" onclick="login()">Ingresar con Google</button><p class="small">Conecta Firebase para sincronizar entre dispositivos. Si no agregas credenciales, entra en modo local.</p></div></div>
 <div id="app" class="hidden">
-  <div class="top"><div class="brand"><span>✦</span> Atelier Personal <small style="color:var(--dim);font-family:'DM Sans'">v4 técnica</small></div><input id="q" class="search" placeholder="Buscar…" oninput="render()"><div class="autosave" id="autosave">Guardado local</div><div class="chip">Fabián · personal</div></div>
+  <div class="top"><div class="brand"><span>✦</span> Atelier Personal <small style="color:var(--dim);font-family:'DM Sans'">v5 Firebase</small></div><input id="q" class="search" placeholder="Buscar…" oninput="render()"><div class="autosave" id="autosave">Guardado local</div><button class="btn outline smallbtn" id="logoutBtn" onclick="logout()" style="display:none">Salir</button><div class="chip" id="userChip">Fabián · personal</div></div>
   <div class="body">
     <aside class="side"><div class="sidehead"><div class="ey">Archivo vivo</div><div class="sidetitle">Atelier</div><div class="sidesub">Pensar, estudiar, escribir y sostener proyectos sin perder el hilo.</div></div><nav class="nav" id="nav"></nav><div class="sidefoot"><div class="focus" id="focusSide"></div></div></aside>
     <main>
@@ -51,7 +51,7 @@ main{overflow:auto}.sec{display:none;padding:26px 32px;max-width:1240px}.sec.act
       <section id="sec-semana" class="sec"><div class="sechd"><div><h2>Semana personal</h2><p>Brújula semanal para estudio, lectura, escritura y vida.</p></div><button class="btn primary" onclick="newItem('tasks')">+ Nueva tarea</button></div><div id="taskForm"></div><div class="week" id="week"></div></section>
       <section id="sec-bitacora" class="sec"><div class="sechd"><div><h2>Bitácora</h2><p>Entradas largas editables, con editor rico en pantalla.</p></div><button class="btn primary" onclick="newItem('logs')">+ Nueva entrada</button></div><div id="logForm"></div><div id="logList"></div></section>
       <section id="sec-archivo" class="sec"><div class="sechd"><div><h2>Archivo</h2><p>Links, documentos, videos, herramientas y referencias, todo editable y eliminable.</p></div><button class="btn primary" onclick="newItem('archive')">+ Nuevo recurso</button></div><div id="archiveForm"></div><div class="cards" id="archiveGrid"></div></section>
-      <section id="sec-ajustes" class="sec"><div class="sechd"><div><h2>Ajustes</h2><p>Identidad, foco y temas visuales.</p></div></div><div class="grid g2"><div class="card"><div class="ct">⚙️ Identidad</div><div class="fr"><label>Foco actual</label><textarea id="focusInput"></textarea></div><button class="btn primary" onclick="saveSettings()">Guardar</button></div><div class="card"><div class="ct">☁️ Login y sincronización</div><div class="warn">Esta maqueta usa almacenamiento local. El siguiente paso es conectar Firebase Auth + Realtime Database para trabajar desde varios dispositivos.</div>
+      <section id="sec-ajustes" class="sec"><div class="sechd"><div><h2>Ajustes</h2><p>Identidad, foco y temas visuales.</p></div></div><div class="grid g2"><div class="card"><div class="ct">⚙️ Identidad</div><div class="fr"><label>Foco actual</label><textarea id="focusInput"></textarea></div><button class="btn primary" onclick="saveSettings()">Guardar</button></div><div class="card"><div class="ct">☁️ Login y sincronización</div><div class="warn">Esta versión ya trae Firebase Auth + Realtime Database preparado. Pega tu configuración en el bloque <code>firebaseConfig</code> del archivo. Si no está configurado, funciona en modo local.</div>
     <div class="quickrow" style="margin-top:12px">
       <button class="btn primary" onclick="exportJSON()">Exportar respaldo JSON</button>
       <button class="btn outline" onclick="$('importFile').click()">Importar JSON</button>
@@ -64,12 +64,36 @@ main{overflow:auto}.sec{display:none;padding:26px 32px;max-width:1240px}.sec.act
   </div>
 </div>
 <div class="toast" id="toast"></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 <script>
 const $=id=>document.getElementById(id), today=new Date();let currentProject=null,currentTab='resumen',edit={},formContext={};
+
+// ===============================
+// FIREBASE CONFIG
+// 1) Crea un proyecto en Firebase.
+// 2) Activa Authentication > Google.
+// 3) Crea Realtime Database.
+// 4) Pega aquí la configuración web de tu app.
+// ===============================
+const firebaseConfig = {
+  apiKey: "AIzaSyDPkx9sbI7FQEEp1ime-C7sICosbblYqAE",
+  authDomain: "investigaciones-d4262.firebaseapp.com",
+  databaseURL: "https://investigaciones-d4262-default-rtdb.firebaseio.com",
+  projectId: "investigaciones-d4262",
+  storageBucket: "investigaciones-d4262.firebasestorage.app",
+  messagingSenderId: "155295863127",
+  appId: "1:155295863127:web:3cb65a4247ef17e30b2e12"
+};
+let firebaseEnabled=false, auth=null, db=null, currentUser=null, remoteReady=false, loadingRemote=false, remoteSaveTimer=null;
+const DATA_KEY='atelierPersonalV2';
+const isFirebaseConfigured=()=>firebaseConfig.apiKey && !firebaseConfig.apiKey.includes('PEGA_AQUI') && firebaseConfig.projectId && !firebaseConfig.projectId.includes('PEGA_AQUI');
+
 const sections=[['inicio','🏠 Inicio'],['proyectos','🧩 Proyectos'],['aprendizajes','🧭 Aprendizajes'],['lecturas','📚 Lecturas'],['ideas','💡 Ideas'],['escritura','✍️ Escritura'],['semana','🗓️ Semana'],['bitacora','📓 Bitácora'],['archivo','🔗 Archivo'],['ajustes','⚙️ Ajustes']];
 const themes=[['atelier','Atelier cálido','Íntimo y suave'],['cuaderno','Cuaderno minimalista','Claro y diario'],['biblioteca','Biblioteca elegante','Académico y sobrio'],['dashboard','Dashboard limpio','Rápido y ejecutivo'],['filosofico','Oscuro filosófico','Nocturno y concentrado']];
-let state=JSON.parse(localStorage.atelierPersonalV2||'null')||{settings:{theme:'atelier',focus:'Ordenar estudios, proyectos e ideas personales.'},meta:{schemaVersion:4,updatedAt:new Date().toISOString()},session:null,projects:[],tasks:[],learnings:[],readings:[],ideas:[],writings:[],logs:[],archive:[]};seed();
-function uid(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}function save(){state.meta=state.meta||{};state.meta.schemaVersion=4;state.meta.updatedAt=new Date().toISOString();localStorage.atelierPersonalV2=JSON.stringify(state);updateAutosave()}function iso(n){let d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}function fmt(d){return d?new Date(d+'T12:00').toLocaleDateString('es-CL',{day:'2-digit',month:'short'}):'Sin fecha'}function esc(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}function val(id){return $(id)?.value?.trim()||''}function htmlVal(id){return clean($(id)?.innerHTML||'')}function pName(id){return state.projects.find(p=>p.id===id)?.name||'Sin proyecto'}function tags(id){return val(id).split(',').map(x=>x.trim()).filter(Boolean)}function search(a,fs){let q=val('q').toLowerCase();return q?a.filter(o=>fs.some(f=>String(o[f]||'').toLowerCase().includes(q)||String(o.content||'').toLowerCase().includes(q)||String((o.tags||[]).join(' ')).toLowerCase().includes(q))):a}
+let state=JSON.parse(localStorage.getItem(DATA_KEY)||'null')||{settings:{theme:'atelier',focus:'Ordenar estudios, proyectos e ideas personales.'},meta:{schemaVersion:4,updatedAt:new Date().toISOString()},session:null,projects:[],tasks:[],learnings:[],readings:[],ideas:[],writings:[],logs:[],archive:[]};seed();
+function uid(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}function save(){state.meta=state.meta||{};state.meta.schemaVersion=5;state.meta.updatedAt=new Date().toISOString();localStorage.setItem(DATA_KEY,JSON.stringify(state));updateAutosave();if(firebaseEnabled&&currentUser&&remoteReady&&!loadingRemote)queueRemoteSave()}function iso(n){let d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}function fmt(d){return d?new Date(d+'T12:00').toLocaleDateString('es-CL',{day:'2-digit',month:'short'}):'Sin fecha'}function esc(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}function val(id){return $(id)?.value?.trim()||''}function htmlVal(id){return clean($(id)?.innerHTML||'')}function pName(id){return state.projects.find(p=>p.id===id)?.name||'Sin proyecto'}function tags(id){return val(id).split(',').map(x=>x.trim()).filter(Boolean)}function search(a,fs){let q=val('q').toLowerCase();return q?a.filter(o=>fs.some(f=>String(o[f]||'').toLowerCase().includes(q)||String(o.content||'').toLowerCase().includes(q)||String((o.tags||[]).join(' ')).toLowerCase().includes(q))):a}
 function clean(h){
  let allowed=['P','BR','B','STRONG','I','EM','UL','OL','LI','H2','H3','BLOCKQUOTE','A','DIV','SPAN'];
  let d=document.createElement('div');d.innerHTML=h||'';
@@ -88,10 +112,66 @@ function clean(h){
  });
  return d.innerHTML;
 }
-function updateAutosave(){if($('autosave'))$('autosave').textContent='Guardado local · '+new Date().toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'})}
+function updateAutosave(){if($('autosave'))$('autosave').textContent=(firebaseEnabled&&currentUser?'Sincronizado':'Guardado local')+' · '+new Date().toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'})}
 function touch(o){if(!o.createdAt)o.createdAt=new Date().toISOString();o.updatedAt=new Date().toISOString();return o}
 function seed(){if(state.projects.length){state.meta=state.meta||{schemaVersion:4};if(!('session' in state))state.session=null;return;}let p1={id:uid(),name:'Lecturas filosóficas',desc:'Deleuze, Spinoza y preguntas sobre subjetivación.',area:'estudios',status:'activo',mood:'curiosidad',progress:35,content:'<p>Un espacio para sostener preguntas filosóficas, no solo acumular lecturas.</p>'},p2={id:uid(),name:'Escritura personal',desc:'Ensayos, notas largas y borradores propios.',area:'escritura',status:'activo',mood:'en proceso',progress:20,content:'<p>Convertir ideas sueltas en textos con continuidad.</p>'};state.projects=[p1,p2];state.tasks=[{id:uid(),title:'Ordenar lecturas prioritarias',desc:'Elegir tres textos base.',project:p1.id,status:'pendiente',priority:'media',due:iso(1),area:'estudio'}];state.learnings=[{id:uid(),title:'Deleuze: acontecimiento y subjetivación',why:'Ordenar una pregunta propia.',concepts:'acontecimiento, devenir, sujeto',questions:'¿Qué sujeto produce esta imagen del pensamiento?',project:p1.id,status:'activo',progress:40,next:'Escribir nota larga.',content:'<p>Empezar por el esquema acontecimiento → categoría → reconfiguración.</p>'}];state.readings=[{id:uid(),title:'Ética',author:'Baruch Spinoza',type:'libro',status:'leyendo',project:p1.id,content:'<p>Afectos, potencia y composición.</p>'}];state.ideas=[{id:uid(),kind:'hipótesis',title:'Pensamiento y subjetivación',content:'<p>El pensamiento no solo representa un sujeto: produce modos de subjetivación.</p>',project:p1.id,date:new Date().toISOString()}];state.writings=[{id:uid(),title:'Notas sobre pensamiento y sujeto',type:'ensayo',status:'idea',project:p1.id,goal:'Convertir conversación filosófica en texto.',progress:10,content:'<h3>Idea inicial</h3><p>Ordenar la relación entre pensamiento, voluntad, devenir y sujeto.</p>'}];state.logs=[{id:uid(),kind:'entrada',title:'Continuidad',content:'<p>Este espacio debe ayudar a dar continuidad, no solo a cumplir tareas.</p>',project:'',date:new Date().toISOString()}];state.archive=[{id:uid(),title:'Carpeta personal de estudios',type:'Drive',url:'',project:'',desc:'Centralizar documentos y recursos.',content:'<p>Agregar aquí links y referencias relevantes.</p>'}];save()}
-function login(){$('login').classList.add('hidden');$('app').classList.remove('hidden');render()}function navTo(s){document.querySelectorAll('.sec').forEach(x=>x.classList.remove('active'));$('sec-'+s).classList.add('active');document.querySelectorAll('.nav div').forEach(x=>x.classList.remove('active'));[...document.querySelectorAll('.nav div')].find(x=>x.dataset.sec===s)?.classList.add('active');render()}function applyTheme(){document.body.className=state.settings.theme==='atelier'?'':state.settings.theme}
+
+function initFirebase(){
+ if(!isFirebaseConfigured()){firebaseEnabled=false;updateAutosave();return}
+ try{
+   firebase.initializeApp(firebaseConfig);
+   auth=firebase.auth();db=firebase.database();firebaseEnabled=true;
+   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
+   auth.onAuthStateChanged(user=>{if(user)startRemoteUser(user);else{currentUser=null;remoteReady=false;$('app').classList.add('hidden');$('login').classList.remove('hidden')}});
+ }catch(e){console.warn('Firebase no iniciado',e);firebaseEnabled=false;updateAutosave()}
+}
+function userPath(){return 'users/'+currentUser.uid+'/atelierPersonal'}
+function startRemoteUser(user){
+ currentUser=user;$('login').classList.add('hidden');$('app').classList.remove('hidden');$('logoutBtn').style.display='inline-flex';$('userChip').textContent=(user.displayName||user.email||'Usuario')+' · sincronizado';
+ const ref=db.ref(userPath());
+ ref.once('value').then(snap=>{
+   if(snap.exists()){
+     loadingRemote=true;state=migrateState(snap.val());localStorage.setItem(DATA_KEY,JSON.stringify(state));loadingRemote=false;remoteReady=true;render();updateAutosave();
+   }else{
+     remoteReady=true;save();render();
+   }
+   ref.on('value',remoteSnap=>{
+     if(!remoteSnap.exists()||loadingRemote)return;
+     const remote=remoteSnap.val();
+     if(!remote||remote.meta?.updatedAt===state.meta?.updatedAt)return;
+     loadingRemote=true;state=migrateState(remote);localStorage.setItem(DATA_KEY,JSON.stringify(state));loadingRemote=false;render();updateAutosave();
+   });
+ }).catch(e=>{console.warn(e);remoteReady=false;toast('Entraste, pero no se pudo leer la base de datos')});
+}
+function queueRemoteSave(){
+ clearTimeout(remoteSaveTimer);
+ remoteSaveTimer=setTimeout(()=>{
+   if(!firebaseEnabled||!currentUser||!remoteReady)return;
+   db.ref(userPath()).set(state).then(()=>updateAutosave()).catch(e=>{console.warn(e);toast('No se pudo sincronizar')});
+ },650);
+}
+function migrateState(data){
+ const base={settings:{theme:'atelier',focus:'Ordenar estudios, proyectos e ideas personales.'},meta:{schemaVersion:5,updatedAt:new Date().toISOString()},session:null,projects:[],tasks:[],learnings:[],readings:[],ideas:[],writings:[],logs:[],archive:[]};
+ const out=Object.assign(base,data||{});
+ ['projects','tasks','learnings','readings','ideas','writings','logs','archive'].forEach(k=>{if(!Array.isArray(out[k]))out[k]=[]});
+ out.settings=Object.assign(base.settings,out.settings||{});out.meta=Object.assign(base.meta,out.meta||{});return out;
+}
+
+async function login(){
+ if(!firebaseEnabled){showAppLocal();return}
+ try{
+   const provider=new firebase.auth.GoogleAuthProvider();
+   await auth.signInWithPopup(provider);
+ }catch(e){
+   console.warn(e);
+   if(e.code==='auth/popup-blocked'||e.code==='auth/popup-closed-by-user'||e.code==='auth/cancelled-popup-request'){
+     try{await auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider())}catch(err){toast('No se pudo iniciar sesión')}
+   }else toast('No se pudo iniciar sesión con Google');
+ }
+}
+function showAppLocal(){currentUser=null;$('login').classList.add('hidden');$('app').classList.remove('hidden');$('logoutBtn').style.display='none';$('userChip').textContent='Fabián · modo local';render()}
+async function logout(){if(firebaseEnabled&&auth)await auth.signOut();currentUser=null;remoteReady=false;$('app').classList.add('hidden');$('login').classList.remove('hidden');toast('Sesión cerrada')}
+function navTo(s){document.querySelectorAll('.sec').forEach(x=>x.classList.remove('active'));$('sec-'+s).classList.add('active');document.querySelectorAll('.nav div').forEach(x=>x.classList.remove('active'));[...document.querySelectorAll('.nav div')].find(x=>x.dataset.sec===s)?.classList.add('active');render()}function applyTheme(){document.body.className=state.settings.theme==='atelier'?'':state.settings.theme}
 function render(){applyTheme();$('nav').innerHTML=sections.map(([id,l])=>`<div data-sec="${id}" onclick="navTo('${id}')" class="${$('sec-'+id)?.classList.contains('active')?'active':''}">${l}</div>`).join('');$('day').textContent=today.toLocaleDateString('es-CL',{day:'2-digit'});$('dateLabel').textContent=today.toLocaleDateString('es-CL',{weekday:'long',month:'long'});$('focusSide').textContent=state.settings.focus;$('focusInput').value=state.settings.focus;$('stP').textContent=state.projects.filter(p=>p.status==='activo').length;$('stE').textContent=state.learnings.filter(s=>s.status==='activo').length;$('stL').textContent=state.readings.filter(r=>r.status==='leyendo').length;$('stI').textContent=state.ideas.length;mini('homeP',state.projects.filter(p=>p.status==='activo').map(p=>({d:'activo',t:p.name,m:p.desc})).slice(0,4));mini('homeE',state.learnings.map(s=>({d:'media',t:s.title,m:s.next})).slice(0,4));mini('homeL',state.readings.map(r=>({d:r.status,t:r.title,m:r.author})).slice(0,4));mini('homeI',state.ideas.map(i=>({d:'baja',t:i.title||i.kind,m:strip(i.content)})).slice(0,4));renderSession();renderContinuity();renderProjectForm();renderProjects();renderProjectDetail();renderLearning();renderReadings();renderIdeas();renderWritings();renderTaskForm();renderWeek();renderLogs();renderArchive();renderThemes()}
 function strip(h){let d=document.createElement('div');d.innerHTML=h||'';return d.textContent||''}function mini(id,a){$(id).innerHTML=a.length?a.map(i=>`<div class="mini"><span class="dot ${i.d}"></span><div><div class="mt">${esc(i.t)}</div><div class="mm">${esc(i.m)}</div></div></div>`).join(''):'<div class="small">Sin registros.</div>'}
 function opts(sel=''){return '<option value="">Sin proyecto</option>'+state.projects.map(p=>`<option value="${p.id}" ${sel===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}
@@ -171,4 +251,5 @@ function tagHtml(arr){return arr&&arr.length?`<div class="tagbox">${arr.map(t=>`
 function taskList(a){return a.map(t=>`<div class="task ${t.priority}"><div class="check ${t.status==='terminada'?'done':''}" onclick="toggleTask('${t.id}')"></div><div style="flex:1"><b class="${t.status==='terminada'?'done':''}">${esc(t.title)}</b><p class="small">${esc(t.desc)} · ${fmt(t.due)} · ${esc(pName(t.project))}</p></div><button class="btn outline smallbtn" onclick="editItem('tasks','${t.id}')">Editar</button><button class="btn danger smallbtn" onclick="del('tasks','${t.id}')">Eliminar</button></div>`).join('')||'<div class="small">Sin tareas.</div>'}
 function renderThemes(){$('themes').innerHTML=themes.map(([id,n,d])=>`<div class="themecard ${state.settings.theme===id?'active':''}" onclick="state.settings.theme='${id}';save();render()"><b>${n}</b><p class="small">${d}</p></div>`).join('')}
 function toggleTask(id){let t=state.tasks.find(x=>x.id===id);t.status=t.status==='terminada'?'pendiente':'terminada';save();render()}function saveSettings(){state.settings.focus=val('focusInput');save();render();toast('Ajustes guardados')}function toast(msg){let t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+initFirebase();
 </script></body></html>
